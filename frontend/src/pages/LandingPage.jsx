@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import ThemeToggle from '../components/ThemeToggle';
+import { ThemeContext } from '../context/ThemeContext';
 import BubblesBackground from '../components/BubblesBackground';
 import ImageGallery from '../components/ImageGallery';
 import {
@@ -31,15 +33,15 @@ const Footer = () => (
 	</footer>
 );
 
-const WelcomeText = () => (
-	<LandingWrapper style={{ zIndex: 1, position: 'relative', minHeight: '100vh', justifyContent: 'center', alignItems: 'center', display: 'flex', flexDirection: 'column', padding: '0 1rem' }}>
-		<Title>Monochrome Todo</Title>
-		<Subtitle>
+const WelcomeText = ({ dark }) => (
+	<LandingWrapper dark={dark} style={{ zIndex: 1, position: 'relative', minHeight: '100vh', justifyContent: 'center', alignItems: 'center', display: 'flex', flexDirection: 'column', padding: '0 1rem' }}>
+		<Title dark={dark}>Monochrome Todo</Title>
+		<Subtitle dark={dark}>
 			Professional, minimalist productivity app for creators. Organize your tasks, track your progress, and stay focused.
 		</Subtitle>
 		<ButtonGroup>
-			<MainButton>Sign In</MainButton>
-			<MainButton>Sign Up</MainButton>
+			<MainButton dark={dark}>Sign In</MainButton>
+			<MainButton dark={dark}>Sign Up</MainButton>
 		</ButtonGroup>
 	</LandingWrapper>
 );
@@ -64,21 +66,27 @@ const GallerySection = () => (
 				/>
 			))}
 		</div>
-		<div style={{ width: '100%', textAlign: 'center', margin: '2rem 0' }}>
-			<MainButton style={{ fontSize: '1.25rem', padding: '1rem 2.5rem', background: '#111', color: '#fff', borderRadius: '8px' }}>
-				Join Free
-			</MainButton>
-		</div>
+			<div style={{ width: '100%', textAlign: 'center', margin: '2rem 0' }}>
+				<MainButton dark={useContext(ThemeContext).darkMode} style={{ fontSize: '1.25rem', padding: '1rem 2.5rem', borderRadius: '8px' }}>
+					Join Free
+				</MainButton>
+			</div>
 	</section>
 );
 
-const LandingPage = () => (
-	<div style={{ position: 'relative', minHeight: '100vh', width: '100vw', maxWidth: '100vw', overflowX: 'hidden', background: '#fff', margin: 0, padding: 0 }}>
-		<BubblesBackground />
-		<WelcomeText />
-		<GallerySection />
-		<Footer />
-	</div>
-);
+const LandingPage = () => {
+	const { darkMode } = useContext(ThemeContext);
+	const bgColor = darkMode ? '#111' : '#fff';
+	const textColor = darkMode ? '#eee' : '#222';
+	return (
+		<div style={{ position: 'relative', minHeight: '100vh', width: '100vw', maxWidth: '100vw', overflowX: 'hidden', background: bgColor, color: textColor, margin: 0, padding: 0, transition: 'background 0.3s, color 0.3s' }}>
+			<ThemeToggle />
+			<BubblesBackground />
+			<WelcomeText dark={darkMode} />
+			<GallerySection />
+			<Footer />
+		</div>
+	);
+};
 
 export default LandingPage;
