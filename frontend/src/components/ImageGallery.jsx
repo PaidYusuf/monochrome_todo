@@ -11,14 +11,15 @@ const GalleryWrapper = styled.div`
   align-items: center;
   margin: 2rem 0;
   position: relative;
+  background: ${({ dark }) => (dark ? '#111' : '#fff')};
 `;
 
 // To adjust gallery speed, change the animation duration below (e.g., 36s for slower, 18s for faster)
 const GalleryTrack = styled.div`
   display: flex;
   gap: 2rem;
-  width: fit-content;
-  animation: scrollGallery 36s linear infinite;
+  width: max-content;
+  animation: scrollGallery 288s linear infinite;
   @keyframes scrollGallery {
     0% { transform: translateX(0); }
     100% { transform: translateX(-50%); }
@@ -56,7 +57,7 @@ const loopImages = [...images, ...images];
 const ImageGallery = () => (
   <GalleryWrapper>
     <GalleryTrack>
-      {loopImages.map((src, idx) => (
+      {Array(8).fill(loopImages).flat().map((src, idx) => (
         <GalleryImage key={idx} src={src} alt={`Gallery ${idx + 1}`} />
       ))}
     </GalleryTrack>

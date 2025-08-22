@@ -6,7 +6,7 @@ export const LandingWrapper = styled.div`
   width: 100vw;
   max-width: 100vw;
   box-sizing: border-box;
-  background: ${({ dark }) => (dark ? '#111' : '#fff')};
+  background: ${({ dark }) => (dark ? 'rgba(17, 17, 17, 0.08)' : 'rgba(255,255,255,0.08)')};
   color: ${({ dark }) => (dark ? '#eee' : '#222')};
   display: flex;
   flex-direction: column;
