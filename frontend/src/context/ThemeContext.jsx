@@ -40,7 +40,14 @@ export const ThemeProvider = ({ children }) => {
   };
 
   // Initial theme: cookie, then backend, then default
-  const [darkMode, setDarkModeState] = useState(false);
+  const [darkMode, setDarkModeState] = useState(() => {
+    const cookiePref = Cookies.get('darkMode');
+    if (cookiePref !== undefined) {
+      return cookiePref === 'true';
+    }
+    // Default: dark mode if no cookie
+    return true;
+  });
 
   useEffect(() => {
     const initTheme = async () => {
