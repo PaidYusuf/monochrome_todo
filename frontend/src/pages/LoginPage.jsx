@@ -83,14 +83,20 @@ const LoginBox = styled.div`
 
 const FuturisticGlow = styled.div`
   position: absolute;
-  top: -40px;
-  left: -40px;
+  pointer-events: none;
   width: 120px;
   height: 120px;
-  background: radial-gradient(circle, #fff 0%, #00f0ff 60%, transparent 100%);
+  background: radial-gradient(circle, #eee 0%, #444 60%, transparent 100%);
   opacity: 0.12;
   filter: blur(16px);
   z-index: 0;
+  left: ${({ x }) => x}px;
+  top: ${({ y }) => y}px;
+`;
+
+const gradientMove = keyframes`
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 `;
 
 const Title = styled.h2`
@@ -99,7 +105,20 @@ const Title = styled.h2`
   letter-spacing: 2px;
   margin-bottom: 32px;
   text-align: center;
-  background: linear-gradient(90deg, #fff 0%, #00f0ff 100%);
+  background: repeating-linear-gradient(90deg,
+    rgba(34,34,34,0.85) 0px, rgba(34,34,34,0.85) 8px,
+    #444 12px, #555 16px,
+    #666 20px, #888 24px,
+    #aaa 28px, #bbb 32px,
+    #ccc 36px, #eee 40px,
+    #fff 44px, #eee 48px,
+    #ccc 52px, #bbb 56px,
+    #aaa 60px, #888 64px,
+    #666 68px, #555 72px,
+    #444 76px, rgba(34,34,34,0.85) 80px
+  );
+  background-size: 400% 100%;
+  animation: ${gradientMove} 30s linear infinite;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -126,26 +145,36 @@ const Input = styled.input`
   }
 `;
 
+const shadowMove = keyframes`
+  0% { box-shadow: 0 -12px 48px 8px rgba(120,120,120,0.32); }
+  25% { box-shadow: 24px 0 48px 8px rgba(120,120,120,0.32); }
+  50% { box-shadow: 0 12px 48px 8px rgba(120,120,120,0.32); }
+  75% { box-shadow: -24px 0 48px 8px rgba(120,120,120,0.32); }
+  100% { box-shadow: 0 -12px 48px 8px rgba(120,120,120,0.32); }
+`;
+
 const Button = styled.button`
   width: 90%;
   max-width: 320px;
   padding: 14px 0;
   border-radius: 12px;
   border: none;
-  background: linear-gradient(90deg, #00f0ff 0%, #222 100%);
+  background: linear-gradient(90deg, #888 0%, #222 100%);
   color: #fff;
   font-size: 1.1rem;
   font-weight: 600;
   letter-spacing: 1px;
   cursor: pointer;
-  box-shadow: 0 4px 16px rgba(0,240,255,0.12);
-  transition: background 0.2s, transform 0.2s;
+  box-shadow: 0 0 48px 8px rgba(120,120,120,0.32);
+  animation: ${shadowMove} 4s linear infinite;
+  transition: background 0.2s, transform 0.2s, animation-duration 0.2s;
   display: block;
   margin-left: auto;
   margin-right: auto;
   &:hover {
-    background: linear-gradient(90deg, #222 0%, #00f0ff 100%);
+    background: linear-gradient(90deg, #222 0%, #888 100%);
     transform: scale(1.04);
+    animation-duration: 1.2s;
   }
 `;
 
@@ -180,7 +209,7 @@ const HomeButton = styled.button`
   justify-content: center;
   &:hover img {
     transform: scale(1.15);
-    filter: drop-shadow(0 0 8px #00f0ff);
+  filter: drop-shadow(0 0 8px #888);
     transition: transform 0.2s, filter 0.2s;
   }
 `;
@@ -192,12 +221,12 @@ const ForgotPassword = styled.div`
   margin: 10px auto 0 auto;
   text-align: right;
   font-size: 0.98rem;
-  color: #00f0ff;
+  color: #888;
   cursor: pointer;
   text-decoration: underline;
   transition: color 0.2s;
   &:hover {
-    color: #fff;
+    color: #eee;
   }
 `;
 
@@ -206,6 +235,7 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [glowPos, setGlowPos] = useState({ x: -40, y: -40 });
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -234,10 +264,20 @@ const LoginPage = () => {
       <RainingBackground />
       <HomeButton onClick={() => navigate('/')} title="Return Home">
         {/* Home icon from Icons8 */}
-        <img src="https://img.icons8.com/ios-filled/50/ffffff/home.png" alt="Home Icon" width="32" height="32" style={{filter: 'drop-shadow(0 0 4px #fff)'}} />
+  <img src="https://img.icons8.com/ios-filled/50/888888/home.png" alt="Home Icon" width="32" height="32" style={{filter: 'drop-shadow(0 0 4px #888)'}} />
       </HomeButton>
-      <LoginBox>
-        <FuturisticGlow />
+      <LoginBox
+        onMouseMove={e => {
+          const box = e.currentTarget.getBoundingClientRect();
+          setGlowPos({
+            x: e.clientX - box.left - 60,
+            y: e.clientY - box.top - 60
+          });
+        }}
+  // onMouseLeave removed so glow stays at last position
+        style={{ position: 'relative' }}
+      >
+        <FuturisticGlow x={glowPos.x} y={glowPos.y} />
         <Title>Sign In</Title>
         {error && <ErrorMsg>{error}</ErrorMsg>}
         <form onSubmit={handleLogin}>
