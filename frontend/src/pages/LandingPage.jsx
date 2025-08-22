@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ThemeToggle from '../components/ThemeToggle';
 import { ThemeContext } from '../context/ThemeContext';
 import BubblesBackground from '../components/BubblesBackground';
@@ -44,18 +45,39 @@ const Footer = () => (
 	</footer>
 );
 
-const WelcomeText = ({ dark }) => (
-	<LandingWrapper dark={dark} style={{ zIndex: 1, position: 'relative', minHeight: '100vh', justifyContent: 'center', alignItems: 'center', display: 'flex', flexDirection: 'column', padding: '0 1rem' }}>
-		<Title dark={dark}>Monochrome Todo List</Title>
-		<Subtitle dark={dark}>
-			Professional, minimalist productivity app for creators. Organize your tasks, track your progress, and stay focused.
-		</Subtitle>
-		<ButtonGroup>
-			<MainButton dark={dark}>Sign In</MainButton>
-			<MainButton dark={dark}>Sign Up</MainButton>
-		</ButtonGroup>
-	</LandingWrapper>
-);
+const WelcomeText = ({ dark }) => {
+	const navigate = useNavigate();
+	return (
+		<LandingWrapper dark={dark} style={{ zIndex: 1, position: 'relative', minHeight: '100vh', justifyContent: 'center', alignItems: 'center', display: 'flex', flexDirection: 'column', padding: '0 1rem' }}>
+			<Title dark={dark}>Monochrome Todo List</Title>
+			<Subtitle dark={dark}>
+				Professional, minimalist productivity app for creators. Organize your tasks, track your progress, and stay focused.
+			</Subtitle>
+			<ButtonGroup>
+				<MainButton dark={dark} onClick={() => navigate('/login')}>
+					<span style={{marginRight: '0.5rem', display: 'inline-block'}}>
+						{/* Simple user icon SVG */}
+						<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+						  <circle cx="9" cy="6" r="3.5" stroke={dark ? '#222' : '#fff'} strokeWidth="1.5"/>
+						  <path d="M3 15c0-2.5 3-4 6-4s6 1.5 6 4" stroke={dark ? '#222' : '#fff'} strokeWidth="1.5" strokeLinecap="round"/>
+						</svg>
+					</span>
+					Sign In
+				</MainButton>
+				<MainButton dark={dark} onClick={() => navigate('/login')}>
+					<span style={{marginRight: '0.5rem', display: 'inline-block'}}>
+						{/* Simple plus icon SVG */}
+						<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+						  <line x1="9" y1="4" x2="9" y2="14" stroke={dark ? '#222' : '#fff'} strokeWidth="1.5" strokeLinecap="round"/>
+						  <line x1="4" y1="9" x2="14" y2="9" stroke={dark ? '#222' : '#fff'} strokeWidth="1.5" strokeLinecap="round"/>
+						</svg>
+					</span>
+					Sign Up
+				</MainButton>
+			</ButtonGroup>
+		</LandingWrapper>
+	);
+};
 
 const GallerySection = () => {
   const { darkMode } = useContext(ThemeContext);
