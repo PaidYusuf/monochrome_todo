@@ -123,12 +123,12 @@ const DownArrow = ({ visible, onClick, dark }) => {
 	 	<button
 	 		style={{
 	 			position: 'fixed',
-	 			left: 'calc(50% - 32px)',
+	 			left: 'calc(50% - 31px)',
 	 			bottom: '32px',
 	 			transform: 'translateX(-50px)',
 	 			background: dark ? '#111' : '#fff',
 	 			color: dark ? '#fff' : '#111',
-	 			border: `2px solid ${dark ? '#fff' : '#111'}`,
+	 			border: `0px solid ${dark ? '#fff' : '#111'}`,
 	 			borderRadius: '50%',
 	 			boxShadow: '0 2px 8px rgba(0,0,0,0.10)',
 	 			width: '40px',
