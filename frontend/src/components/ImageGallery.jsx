@@ -11,7 +11,7 @@ const GalleryWrapper = styled.div`
   align-items: center;
   margin: 2rem 0;
   position: relative;
-  background: ${({ dark }) => (dark ? '#111' : '#fff')};
+    background: ${({ $dark }) => ($dark ? '#111' : '#fff')};
 `;
 
 // To adjust gallery speed, change the animation duration below (e.g., 36s for slower, 18s for faster)
@@ -54,8 +54,8 @@ const IMAGE_WIDTH = 320;
 const IMAGE_GAP = 32; // 2rem in px
 const loopImages = [...images, ...images];
 
-const ImageGallery = () => (
-  <GalleryWrapper>
+const ImageGallery = ({ dark }) => (
+  <GalleryWrapper $dark={dark}>
     <GalleryTrack>
       {Array(8).fill(loopImages).flat().map((src, idx) => (
         <GalleryImage key={idx} src={src} alt={`Gallery ${idx + 1}`} />

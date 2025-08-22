@@ -59,36 +59,36 @@ const WelcomeText = ({ dark }) => (
 
 const GallerySection = () => {
   const { darkMode } = useContext(ThemeContext);
-  return (
-    <section style={{ width: '100vw', maxWidth: '100vw', minHeight: '60vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'transparent', margin: '0 auto', padding: '4rem 0' }}>
-      <ImageGallery />
-      <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2rem', margin: '4rem 0' }}>
-        {featureImages.map((feature, idx) => (
-          <div key={idx} style={{ width: '100%', maxWidth: '500px', margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
-            <img
-              src={feature.src}
-              alt={feature.label}
-              style={{
-                width: '90%',
-                maxWidth: '500px',
-                borderRadius: '16px',
-                boxShadow: '0 4px 24px rgba(0,0,0,0.08)',
-                margin: '0 auto',
-                display: 'block',
-              }}
-            />
-            <div style={{ fontWeight: 'bold', fontSize: '1.1rem', color: darkMode ? '#eee' : '#444', textAlign: 'center', marginTop: '0.5rem' }}>{feature.label}</div>
-            <div style={{ fontSize: '1.05rem', color: darkMode ? '#bbb' : '#888', textAlign: 'center', marginBottom: '1rem' }}>{feature.desc}</div>
-          </div>
-        ))}
-      </div>
-      <div style={{ width: '100%', textAlign: 'center', margin: '2rem 0' }}>
-        <MainButton dark={darkMode} style={{ fontSize: '1.25rem', padding: '1rem 2.5rem', borderRadius: '8px' }}>
-          Join Free
-        </MainButton>
-      </div>
-    </section>
-  );
+	return (
+		<section style={{ width: '100vw', maxWidth: '100vw', minHeight: '60vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'transparent', margin: '0 auto', padding: '4rem 0', position: 'relative' }}>
+			<ImageGallery dark={darkMode} />
+			<div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2rem', margin: '4rem 0', position: 'relative', zIndex: 2 }}>
+				{featureImages.map((feature, idx) => (
+					<div key={idx} style={{ width: '100%', maxWidth: '500px', margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
+						<img
+							src={feature.src}
+							alt={feature.label}
+							style={{
+								width: '90%',
+								maxWidth: '500px',
+								borderRadius: '16px',
+								boxShadow: '0 4px 24px rgba(0,0,0,0.08)',
+								margin: '0 auto',
+								display: 'block',
+							}}
+						/>
+						<div style={{ fontWeight: 'bold', fontSize: '1.1rem', color: darkMode ? '#eee' : '#444', textAlign: 'center', marginTop: '0.5rem' }}>{feature.label}</div>
+						<div style={{ fontSize: '1.05rem', color: darkMode ? '#bbb' : '#888', textAlign: 'center', marginBottom: '1rem' }}>{feature.desc}</div>
+					</div>
+				))}
+			</div>
+			<div style={{ width: '100%', textAlign: 'center', margin: '2rem 0', position: 'relative', zIndex: 2 }}>
+				<MainButton dark={darkMode} style={{ fontSize: '1.25rem', padding: '1rem 2.5rem', borderRadius: '8px' }}>
+					Join Free
+				</MainButton>
+			</div>
+		</section>
+	);
 };
 
 const LandingPage = () => {
