@@ -169,17 +169,16 @@ const HomeButton = styled.button`
   cursor: pointer;
   box-shadow: 0 2px 8px rgba(94, 94, 94, 0.45);
   transition: background 0.2s, color 0.2s;
-  z-index: 1000;
+  z-index: 9999;
   display: flex;
   align-items: center;
   justify-content: center;
   &:hover img {
     transform: scale(1.15);
-  filter: drop-shadow(0 0 8px #888888d3);
+    filter: drop-shadow(0 0 8px #888888d3);
     transition: transform 0.2s, filter 0.2s;
   }
 `;
-
 
 const ForgotPassword = styled.div`
   width: 90%;
@@ -196,9 +195,10 @@ const ForgotPassword = styled.div`
   }
 `;
 
-const LoginPage = () => {
+const SignupPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [glowPos, setGlowPos] = useState({ x: -40, y: -40 });
@@ -206,18 +206,22 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const { darkMode, setDarkMode } = useContext(ThemeContext);
 
-  const handleLogin = async (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
     setError('');
+    if (password !== confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:5000/api/auth/signin', {
+      const res = await fetch('http://localhost:5000/api/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.message || 'Login failed');
+      if (!res.ok) throw new Error(data.message || 'Signup failed');
       localStorage.setItem('token', data.token);
       window.location.href = '/';
     } catch (err) {
@@ -266,9 +270,9 @@ const LoginPage = () => {
           {darkMode ? 'Light Mode' : 'Dark Mode'}
         </button>
         {showGlow && <FuturisticGlow x={glowPos.x} y={glowPos.y} />}
-        <Title>Sign In</Title>
+        <Title>Sign Up</Title>
         {error && <ErrorMsg>{error}</ErrorMsg>}
-        <form onSubmit={handleLogin}>
+        <form onSubmit={handleSignup}>
           <Input
             type="email"
             placeholder="Email"
@@ -284,13 +288,20 @@ const LoginPage = () => {
             onChange={e => setPassword(e.target.value)}
             required
           />
-          <Button type="submit" disabled={loading}>{loading ? 'Signing in...' : 'Sign In'}</Button>
+          <Input
+            type="password"
+            placeholder="Confirm Password"
+            value={confirmPassword}
+            onChange={e => setConfirmPassword(e.target.value)}
+            required
+          />
+          <Button type="submit" disabled={loading}>{loading ? 'Signing up...' : 'Sign Up'}</Button>
         </form>
         <div style={{ width: '90%', maxWidth: 320, margin: '16px auto 0 auto', textAlign: 'center' }}>
           <span style={{ color: '#bbb', fontSize: '0.98rem' }}>
-            Don't have an account?{' '}
-            <span style={{ color: '#fff', textDecoration: 'underline', cursor: 'pointer' }} onClick={() => navigate('/register')}>
-              Sign Up
+            Do you have an account?{' '}
+            <span style={{ color: '#fff', textDecoration: 'underline', cursor: 'pointer' }} onClick={() => navigate('/login')}>
+              Login
             </span>
           </span>
         </div>
@@ -300,4 +311,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default SignupPage;

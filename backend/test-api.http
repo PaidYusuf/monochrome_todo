@@ -25,6 +25,6 @@ DELETE http://localhost:5000/api/auth/user
 Content-Type: application/json
 
 {
-  "email": "testuser@example.com"
+  "email": "test@gmail.com"
 }
 

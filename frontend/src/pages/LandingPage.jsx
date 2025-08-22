@@ -64,7 +64,7 @@ const WelcomeText = ({ dark }) => {
 					</span>
 					Sign In
 				</MainButton>
-				<MainButton dark={dark} onClick={() => navigate('/login')}>
+				<MainButton dark={dark} onClick={() => navigate('/register')}>
 					<span style={{marginRight: '0.5rem', display: 'inline-block'}}>
 						{/* Simple plus icon SVG */}
 						<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
