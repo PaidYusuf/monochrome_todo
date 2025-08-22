@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import ThemeToggle from '../components/ThemeToggle';
 import { ThemeContext } from '../context/ThemeContext';
 import BubblesBackground from '../components/BubblesBackground';
@@ -46,7 +46,7 @@ const Footer = () => (
 
 const WelcomeText = ({ dark }) => (
 	<LandingWrapper dark={dark} style={{ zIndex: 1, position: 'relative', minHeight: '100vh', justifyContent: 'center', alignItems: 'center', display: 'flex', flexDirection: 'column', padding: '0 1rem' }}>
-		<Title dark={dark}>Monochrome Todo</Title>
+		<Title dark={dark}>Monochrome Todo List</Title>
 		<Subtitle dark={dark}>
 			Professional, minimalist productivity app for creators. Organize your tasks, track your progress, and stay focused.
 		</Subtitle>
@@ -91,10 +91,71 @@ const GallerySection = () => {
 	);
 };
 
+const bounce = {
+	animation: 'bounceDown 2.2s infinite',
+};
+
+const DownArrow = ({ visible, onClick, dark }) => {
+	if (!visible) return null;
+	 return (
+	 	<button
+	 		style={{
+	 			position: 'fixed',
+	 			left: 'calc(50% - 32px)',
+	 			bottom: '32px',
+	 			transform: 'translateX(-50px)',
+	 			background: dark ? '#111' : '#fff',
+	 			color: dark ? '#fff' : '#111',
+	 			border: `2px solid ${dark ? '#fff' : '#111'}`,
+	 			borderRadius: '50%',
+	 			boxShadow: '0 2px 8px rgba(0,0,0,0.10)',
+	 			width: '40px',
+	 			height: '40px',
+	 			display: 'flex',
+	 			alignItems: 'center',
+	 			justifyContent: 'center',
+	 			fontSize: '1.5rem',
+	 			cursor: 'pointer',
+	 			zIndex: 1000,
+	 			opacity: 0.92,
+	 			transition: 'background 0.2s, color 0.2s, border 0.2s',
+	 			...bounce,
+	 		}}
+            onClick={onClick}
+	 		
+	 		aria-label="Scroll down"
+	 	>
+	 		<span style={{ display: 'block', width: '100%', height: '100%', lineHeight: '1', fontWeight: 700, transform: 'translateX(-10px) translateY(-10px)' }}>
+	 			▼
+	 		</span>
+	 		<style>{`
+	 			@keyframes bounceDown {
+	 				0%, 100% { transform: translateY(0); }
+	 				50% { transform: translateY(8px); }
+	 			}
+	 		`}</style>
+	 	</button>
+	 );
+};
+
 const LandingPage = () => {
-		const { darkMode } = useContext(ThemeContext);
+	const { darkMode } = useContext(ThemeContext);
 	const bgColor = darkMode ? '#111' : '#fff';
 	const textColor = darkMode ? '#eee' : '#222';
+	const [showArrow, setShowArrow] = useState(true);
+
+	useEffect(() => {
+		const handleScroll = () => {
+			setShowArrow(window.scrollY < 32);
+		};
+		window.addEventListener('scroll', handleScroll);
+		return () => window.removeEventListener('scroll', handleScroll);
+	}, []);
+
+	const handleArrowClick = () => {
+		window.scrollTo({ top: window.innerHeight * 0.9, behavior: 'smooth' });
+	};
+
 	return (
 		<div style={{ position: 'relative', minHeight: '100vh', width: '100vw', maxWidth: '100vw', overflowX: 'hidden', background: bgColor, color: textColor, margin: 0, padding: 0, transition: 'background 0.3s, color 0.3s' }}>
 			<ThemeToggle />
@@ -102,6 +163,7 @@ const LandingPage = () => {
 			<WelcomeText dark={darkMode} />
 			<GallerySection />
 			<Footer />
+			<DownArrow visible={showArrow} onClick={handleArrowClick} dark={darkMode} />
 		</div>
 	);
 };
