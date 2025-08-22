@@ -203,17 +203,16 @@ const HomeButton = styled.button`
   cursor: pointer;
   box-shadow: 0 2px 8px rgba(94, 94, 94, 0.45);
   transition: background 0.2s, color 0.2s;
-  z-index: 1000;
+  z-index: 9999;
   display: flex;
   align-items: center;
   justify-content: center;
   &:hover img {
     transform: scale(1.15);
-  filter: drop-shadow(0 0 8px #888888d3);
+    filter: drop-shadow(0 0 8px #888888d3);
     transition: transform 0.2s, filter 0.2s;
   }
 `;
-
 
 const ForgotPassword = styled.div`
   width: 90%;
