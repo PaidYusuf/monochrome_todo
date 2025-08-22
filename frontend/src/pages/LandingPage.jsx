@@ -106,7 +106,7 @@ const GallerySection = () => {
 			</div>
 			<div style={{ width: '100%', textAlign: 'center', margin: '2rem 0', position: 'relative', zIndex: 2 }}>
 				<MainButton dark={darkMode} style={{ fontSize: '1.25rem', padding: '1rem 2.5rem', borderRadius: '8px' }}>
-					Join Free
+					Join Now
 				</MainButton>
 			</div>
 		</section>
