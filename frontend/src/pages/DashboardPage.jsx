@@ -701,6 +701,12 @@ const DashboardPage = () => {
         <NavButtons>
           <NavButton 
             darkMode={darkMode} 
+            onClick={() => navigate('/')} // Home route
+          >
+            Home
+          </NavButton>
+          <NavButton 
+            darkMode={darkMode} 
             active={view === 'calendar'} 
             onClick={() => setView('calendar')}
           >
@@ -715,7 +721,25 @@ const DashboardPage = () => {
           </NavButton>
           
           <ThemeToggle darkMode={darkMode} onClick={() => setDarkMode(!darkMode)}>
-            {darkMode ? '☀️' : '🌙'}
+            {darkMode ? (
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="11" cy="11" r="5" fill="#FFD600" />
+                <g stroke="#FFD600" strokeWidth="2">
+                  <line x1="11" y1="2" x2="11" y2="6" />
+                  <line x1="11" y1="16" x2="11" y2="20" />
+                  <line x1="2" y1="11" x2="6" y2="11" />
+                  <line x1="16" y1="11" x2="20" y2="11" />
+                  <line x1="4.22" y1="4.22" x2="7" y2="7" />
+                  <line x1="15" y1="15" x2="17.78" y2="17.78" />
+                  <line x1="4.22" y1="17.78" x2="7" y2="15" />
+                  <line x1="15" y1="7" x2="17.78" y2="4.22" />
+                </g>
+              </svg>
+            ) : (
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M17 11.5A6 6 0 0 1 11.5 5c-.28 0-.56.02-.83.06a.5.5 0 0 0-.32.81A5 5 0 1 0 16.13 13.65a.5.5 0 0 0 .81-.32c.04-.27.06-.55.06-.83Z" fill="#FFD600" />
+              </svg>
+            )}
           </ThemeToggle>
           
           <LogoutButton onClick={handleLogout}>
