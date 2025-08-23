@@ -29,63 +29,36 @@ const Container = styled.div`
   animation: ${gradientShift} 15s ease infinite;
   color: ${({ darkMode }) => darkMode ? '#eee' : '#222'};
   font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  position: relative;
   overflow-x: hidden;
-  display: flex;
-  flex-direction: column;
-  width: 100vw;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
 `;
 
 const Header = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.5rem 2rem;
+  padding: 2rem;
   background: ${({ darkMode }) => darkMode ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.1)'};
   backdrop-filter: blur(10px);
-  width: 100%;
-  box-sizing: border-box;
-  border-bottom: 1px solid ${({ darkMode }) => darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'};
-  @media (max-width: 768px) {
-    flex-direction: column;
-    gap: 1rem;
-    padding: 1rem;
-  }
 `;
 
 const Logo = styled.h1`
-  font-size: 1.5rem;
+  font-size: 2rem;
   font-weight: 700;
-  letter-spacing: 1px;
+  letter-spacing: 2px;
   margin: 0;
   color: ${({ darkMode }) => darkMode ? '#fff' : '#222'};
-  
-  @media (max-width: 768px) {
-    font-size: 1.3rem;
-  }
 `;
 
 const NavButtons = styled.div`
   display: flex;
-  gap: 0.5rem;
+  gap: 1rem;
   align-items: center;
-  flex-wrap: wrap;
-  
-  @media (max-width: 768px) {
-    justify-content: center;
-  }
 `;
 
 const NavButton = styled.button`
-  padding: 0.5rem 1rem;
-  font-size: 0.9rem;
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
   font-weight: 600;
   border: none;
   border-radius: 4px;
@@ -108,8 +81,8 @@ const NavButton = styled.button`
 `;
 
 const LogoutButton = styled.button`
-  padding: 0.5rem 1rem;
-  font-size: 0.9rem;
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
   font-weight: 600;
   border: none;
   border-radius: 4px;
@@ -140,76 +113,48 @@ const ThemeToggle = styled.div`
 `;
 
 const MainContent = styled.div`
-  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
   padding: 2rem;
-  box-sizing: border-box;
-  @media (max-width: 1280px) {
-    padding: 1.5rem;
-  }
-  @media (max-width: 768px) {
-    padding: 1rem;
-  }
-  @media (max-width: 480px) {
-    padding: 0.75rem;
-  }
 `;
 
 const AddTaskForm = styled.form`
-  background: ${({ darkMode }) => darkMode ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.9)'};
+  background: ${({ darkMode }) => darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'};
   backdrop-filter: blur(10px);
   padding: 2rem;
-  border-radius: 12px;
+  border-radius: 8px;
   margin-bottom: 2rem;
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
-  width: 100%;
-  box-sizing: border-box;
-  border: 1px solid ${({ darkMode }) => darkMode ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.1)'};
-  box-shadow: ${({ darkMode }) => darkMode 
-    ? '0 4px 20px rgba(0,0,0,0.3)' 
-    : '0 4px 20px rgba(0,0,0,0.1)'};
-  @media (max-width: 768px) {
-    flex-direction: column;
-    padding: 1.5rem;
-    gap: 1rem;
-  }
 `;
 
 const Input = styled.input`
-  padding: 0.8rem 1rem;
-  border: 1px solid ${({ darkMode }) => darkMode ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.2)'};
-  border-radius: 8px;
-  background: ${({ darkMode }) => darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.95)'};
+  padding: 0.75rem 1rem;
+  border: 1px solid ${({ darkMode }) => darkMode ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)'};
+  border-radius: 4px;
+  background: ${({ darkMode }) => darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.8)'};
   color: ${({ darkMode }) => darkMode ? '#eee' : '#222'};
-  font-size: 0.95rem;
+  font-size: 1rem;
   flex: ${({ flex }) => flex || 1};
-  min-width: 0;
-  transition: all 0.2s ease;
   
   &:focus {
     outline: none;
-    border-color: ${({ darkMode }) => darkMode ? '#fff' : '#007bff'};
-    box-shadow: 0 0 0 2px ${({ darkMode }) => darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,123,255,0.1)'};
+    border-color: ${({ darkMode }) => darkMode ? '#fff' : '#222'};
   }
   
   &::placeholder {
     color: ${({ darkMode }) => darkMode ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)'};
   }
-  
-  @media (max-width: 768px) {
-    width: 100%;
-    flex: none;
-  }
 `;
 
 const Select = styled.select`
-  padding: 0.6rem 0.8rem;
+  padding: 0.75rem 1rem;
   border: 1px solid ${({ darkMode }) => darkMode ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)'};
   border-radius: 4px;
   background: ${({ darkMode }) => darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.8)'};
   color: ${({ darkMode }) => darkMode ? '#eee' : '#222'};
-  font-size: 0.9rem;
+  font-size: 1rem;
   cursor: pointer;
   
   &:focus {
@@ -219,8 +164,8 @@ const Select = styled.select`
 `;
 
 const Button = styled.button`
-  padding: 0.6rem 1.5rem;
-  font-size: 0.9rem;
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
   font-weight: 600;
   border: none;
   border-radius: 4px;
@@ -243,19 +188,10 @@ const Button = styled.button`
 `;
 
 const TasksSection = styled.div`
-  background: ${({ darkMode }) => darkMode ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.9)'};
+  background: ${({ darkMode }) => darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'};
   backdrop-filter: blur(10px);
-  border-radius: 12px;
+  border-radius: 8px;
   padding: 2rem;
-  width: 100%;
-  box-sizing: border-box;
-  border: 1px solid ${({ darkMode }) => darkMode ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.1)'};
-  box-shadow: ${({ darkMode }) => darkMode 
-    ? '0 4px 20px rgba(0,0,0,0.3)' 
-    : '0 4px 20px rgba(0,0,0,0.1)'};
-  @media (max-width: 768px) {
-    padding: 1.5rem;
-  }
 `;
 
 const SectionTitle = styled.h2`
@@ -263,28 +199,18 @@ const SectionTitle = styled.h2`
   font-weight: 600;
   margin-bottom: 1.5rem;
   color: ${({ darkMode }) => darkMode ? '#fff' : '#222'};
-  text-align: center;
-  
-  @media (max-width: 768px) {
-    font-size: 1.3rem;
-  }
 `;
 
 const FilterButtons = styled.div`
   display: flex;
-  gap: 0.75rem;
+  gap: 1rem;
   margin-bottom: 2rem;
   flex-wrap: wrap;
-  justify-content: center;
-  
-  @media (max-width: 768px) {
-    gap: 0.5rem;
-  }
 `;
 
 const FilterButton = styled.button`
-  padding: 0.4rem 0.8rem;
-  font-size: 0.8rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
   font-weight: 500;
   border: 1px solid ${({ darkMode, active }) => {
     if (active) return darkMode ? '#fff' : '#222';
@@ -310,13 +236,13 @@ const FilterButton = styled.button`
 
 const TaskList = styled.div`
   display: grid;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
+  gap: 1rem;
+  margin-bottom: 2rem;
 `;
 
 const TaskItem = styled.div`
   background: ${({ darkMode }) => darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.8)'};
-  padding: 0.8rem;
+  padding: 1rem;
   border-radius: 6px;
   display: flex;
   justify-content: space-between;
@@ -328,27 +254,17 @@ const TaskItem = styled.div`
     transform: translateY(-3px);
     background: ${({ darkMode }) => darkMode ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.9)'};
   }
-  
-  @media (max-width: 768px) {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
-  }
 `;
 
 const TaskContent = styled.div`
   flex: 1;
   display: flex;
   align-items: center;
-  gap: 0.8rem;
-  
-  @media (max-width: 768px) {
-    width: 100%;
-  }
+  gap: 1rem;
 `;
 
 const TaskText = styled.span`
-  font-size: 0.9rem;
+  font-size: 1rem;
   text-decoration: ${({ finished }) => finished ? 'line-through' : 'none'};
   opacity: ${({ finished }) => finished ? 0.6 : 1};
   cursor: pointer;
@@ -356,12 +272,7 @@ const TaskText = styled.span`
 
 const TaskActions = styled.div`
   display: flex;
-  gap: 0.3rem;
-  
-  @media (max-width: 768px) {
-    width: 100%;
-    justify-content: flex-end;
-  }
+  gap: 0.5rem;
 `;
 
 const Checkbox = styled.input`
@@ -403,67 +314,13 @@ const PageButton = styled.button`
 const EditForm = styled.form`
   background: ${({ darkMode }) => darkMode ? 'rgba(76, 175, 80, 0.1)' : 'rgba(76, 175, 80, 0.1)'};
   backdrop-filter: blur(10px);
-  padding: 1rem;
+  padding: 1.5rem;
   border-radius: 8px;
   margin-bottom: 1rem;
   display: flex;
-  gap: 0.5rem;
+  gap: 1rem;
   flex-wrap: wrap;
   border: 1px solid #4CAF50;
-  
-  @media (max-width: 768px) {
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-`;
-
-const CalendarGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 1rem;
-  
-  @media (max-width: 1200px) {
-    grid-template-columns: repeat(5, 1fr);
-  }
-  
-  @media (max-width: 900px) {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.75rem;
-  }
-  
-  @media (max-width: 600px) {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.5rem;
-  }
-  
-  @media (max-width: 400px) {
-    grid-template-columns: 1fr;
-  }
-`;
-
-const CalendarDay = styled.div`
-  background: ${({ $darkMode }) => $darkMode ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.95)'};
-  backdrop-filter: blur(10px);
-  padding: 1rem;
-  border-radius: 10px;
-  min-height: 140px;
-  border: 1px solid ${({ $darkMode }) => $darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'};
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: ${({ $darkMode }) => $darkMode 
-    ? '0 2px 8px rgba(0,0,0,0.3)' 
-    : '0 2px 8px rgba(0,0,0,0.1)'};
-  
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: ${({ $darkMode }) => $darkMode 
-      ? '0 4px 15px rgba(0,0,0,0.4)' 
-      : '0 4px 15px rgba(0,0,0,0.15)'};
-  }
-  
-  @media (max-width: 768px) {
-    min-height: 120px;
-    padding: 0.75rem;
-  }
 `;
 
 const DashboardPage = () => {
@@ -817,61 +674,27 @@ const DashboardPage = () => {
 
           {view === 'calendar' ? (
             <div>
-              <div style={{ 
-                textAlign: 'center', 
-                marginBottom: '1rem', 
-                display: 'flex', 
-                alignItems: 'center', 
-                justifyContent: 'center', 
-                flexWrap: 'wrap',
-                gap: '0.5rem'
-              }}>
-                <Button 
-                  darkMode={darkMode} 
-                  onClick={() => setWeekOffset(weekOffset - 1)}
-                  style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem' }}
-                >
-                  ← Prev
-                </Button>
-                <span style={{ 
-                  margin: '0 1rem', 
-                  fontSize: '1rem', 
-                  fontWeight: 'bold',
-                  textAlign: 'center'
-                }}>
+              <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+                <Button darkMode={darkMode} onClick={() => setWeekOffset(weekOffset - 1)}>← Previous Week</Button>
+                <span style={{ margin: '0 2rem', fontSize: '1.2rem', fontWeight: 'bold' }}>
                   Week of {format(weekStart, 'dd MMM yyyy')}
                 </span>
-                <Button 
-                  darkMode={darkMode} 
-                  onClick={() => setWeekOffset(weekOffset + 1)}
-                  style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem' }}
-                >
-                  Next →
-                </Button>
+                <Button darkMode={darkMode} onClick={() => setWeekOffset(weekOffset + 1)}>Next Week →</Button>
               </div>
               
-              <CalendarGrid>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
                 {weekDays.map(day => (
-                  <CalendarDay
+                  <div
                     key={day.toISOString()}
-                    $darkMode={darkMode}
+                    style={{
+                      background: darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.8)',
+                      padding: '1rem',
+                      borderRadius: '6px',
+                      minHeight: '150px'
+                    }}
                   >
-                    <div style={{ 
-                      fontWeight: 'bold', 
-                      marginBottom: '0.5rem', 
-                      fontSize: '0.9rem',
-                      color: darkMode ? '#fff' : '#333'
-                    }}>
-                      {format(day, 'EEE')}
-                    </div>
-                    <div style={{ 
-                      fontSize: '0.8rem', 
-                      marginBottom: '0.75rem', 
-                      opacity: 0.8,
-                      color: darkMode ? '#ccc' : '#666'
-                    }}>
-                      {format(day, 'dd MMM')}
-                    </div>
+                    <div style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>{format(day, 'EEEE')}</div>
+                    <div style={{ fontSize: '0.9rem', marginBottom: '1rem', opacity: 0.7 }}>{format(day, 'dd MMM')}</div>
                     
                     {todos.filter(todo => {
                       const todoDate = new Date(todo.date);
@@ -880,35 +703,30 @@ const DashboardPage = () => {
                       <div 
                         key={task._id} 
                         style={{ 
-                          fontSize: '0.75rem', 
-                          padding: '0.3rem 0.5rem', 
+                          fontSize: '0.8rem', 
+                          padding: '0.3rem', 
                           marginBottom: '0.3rem',
-                          background: darkMode ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.08)',
-                          borderRadius: '4px',
+                          background: darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)',
+                          borderRadius: '3px',
                           textDecoration: task.finished ? 'line-through' : 'none',
-                          opacity: task.finished ? 0.6 : 1,
-                          transition: 'all 0.2s ease'
+                          opacity: task.finished ? 0.6 : 1
                         }}
                       >
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                           <Checkbox
                             type="checkbox"
                             checked={task.finished}
                             onChange={() => handleToggleTask(task._id, task.finished)}
-                            style={{ width: '12px', height: '12px' }}
                           />
-                          <span 
-                            onClick={() => handleEditTask(task)} 
-                            style={{ cursor: 'pointer', flex: 1, lineHeight: '1.3' }}
-                          >
-                            {task.text.length > 22 ? `${task.text.substring(0, 22)}...` : task.text}
+                          <span onClick={() => handleEditTask(task)} style={{ cursor: 'pointer', flex: 1 }}>
+                            {task.text}
                           </span>
                         </div>
                       </div>
                     ))}
-                  </CalendarDay>
+                  </div>
                 ))}
-              </CalendarGrid>
+              </div>
             </div>
           ) : (
             <div>
@@ -928,24 +746,20 @@ const DashboardPage = () => {
                         >
                           {task.text}
                         </TaskText>
-                        <div style={{ fontSize: '0.7rem', opacity: 0.7, marginTop: '0.2rem' }}>
+                        <div style={{ fontSize: '0.8rem', opacity: 0.7, marginTop: '0.3rem' }}>
                           {format(new Date(task.date), 'dd MMM yyyy')} • {task.startHour} - {task.endHour}
                         </div>
                       </div>
                     </TaskContent>
                     <TaskActions>
-                      <Button 
-                        onClick={() => handleEditTask(task)} 
-                        darkMode={darkMode} 
-                        style={{ padding: '0.4rem 0.8rem', fontSize: '0.75rem' }}
-                      >
+                      <Button onClick={() => handleEditTask(task)} darkMode={darkMode} style={{ padding: '0.5rem 1rem', fontSize: '0.8rem' }}>
                         Edit
                       </Button>
                       <Button 
                         variant="danger" 
                         onClick={() => handleDeleteTask(task._id)} 
                         darkMode={darkMode}
-                        style={{ padding: '0.4rem 0.8rem', fontSize: '0.75rem' }}
+                        style={{ padding: '0.5rem 1rem', fontSize: '0.8rem' }}
                       >
                         Delete
                       </Button>
