@@ -3,7 +3,6 @@ POST http://localhost:5000/api/auth/signup
 Content-Type: application/json
 
 {
-  "username": "testuser",
   "email": "testuser@example.com",
   "password": "testpassword"
 }
@@ -17,14 +16,29 @@ Content-Type: application/json
   "password": "testpassword"
 }
 
-
-
-
 ### Delete User
 DELETE http://localhost:5000/api/auth/user
 Content-Type: application/json
 
 {
-  "email": "test@gmail.com"
+  "email": "testuser@example.com"
 }
+
+
+
+### Create a new task
+POST http://localhost:5000/api/tasks
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4YTk3YThiNWNiZTM4YTUxNjc3NTllMSIsImlhdCI6MTc1NTkzNzU1NiwiZXhwIjoxNzU2MDIzOTU2fQ.a3OSs8YP1fIb94u38jhCIFzQ9phBeMdEvnlHwo2MwAE
+Content-Type: application/json
+
+{
+  "text": "Test Task",
+  "date": "2025-08-23",
+  "startHour": "09:00",
+  "endHour": "10:00"
+}
+
+### Get all tasks for user
+GET http://localhost:5000/api/tasks
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4YTk3YThiNWNiZTM4YTUxNjc3NTllMSIsImlhdCI6MTc1NTkzNzU1NiwiZXhwIjoxNzU2MDIzOTU2fQ.a3OSs8YP1fIb94u38jhCIFzQ9phBeMdEvnlHwo2MwAE
 

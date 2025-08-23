@@ -272,6 +272,33 @@ const DashboardPage = () => {
   const [page, setPage] = useState(1);
   const [customStart, setCustomStart] = useState(new Date());
   const [customEnd, setCustomEnd] = useState(new Date());
+  const [editingTask, setEditingTask] = useState(null);
+  const [editText, setEditText] = useState('');
+  const [editDate, setEditDate] = useState(new Date());
+  const [editStartHour, setEditStartHour] = useState('00:00');
+  const [editEndHour, setEditEndHour] = useState('01:00');
+
+  // Fetch tasks from backend
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+    fetch("http://localhost:5000/api/tasks", {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data)) {
+          setTodos(data);
+        }
+      })
+      .catch(err => {
+        // Optionally handle error
+      });
+  }, []);
 
   // Generate week days dynamically
   const weekStart = addDays(startOfWeek(new Date(), { weekStartsOn: 6 }), weekOffset * 7); // Saturday start
@@ -290,13 +317,114 @@ const DashboardPage = () => {
   const handleAddTask = (e) => {
     e.preventDefault();
     if (!task.trim()) return;
-    setTodos([...todos, {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+    
+    const newTask = {
       text: task,
       date: format(selectedDate, 'yyyy-MM-dd'),
       startHour,
       endHour
-    }]);
-    setTask('');
+    };
+    
+    fetch("http://localhost:5000/api/tasks", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(newTask)
+    })
+      .then(res => res.json())
+      .then(data => {
+        setTodos([...todos, data]);
+        setTask('');
+      })
+      .catch(err => {
+        console.error('Error adding task:', err);
+      });
+  };
+
+  // Edit task
+  const handleEditTask = (taskToEdit) => {
+    setEditingTask(taskToEdit);
+    setEditText(taskToEdit.text);
+    setEditDate(new Date(taskToEdit.date));
+    setEditStartHour(taskToEdit.startHour);
+    setEditEndHour(taskToEdit.endHour);
+  };
+
+  // Update task
+  const handleUpdateTask = (e) => {
+    e.preventDefault();
+    if (!editText.trim()) return;
+    const token = localStorage.getItem("token");
+    if (!token) return;
+    
+    const updatedTask = {
+      text: editText,
+      date: format(editDate, 'yyyy-MM-dd'),
+      startHour: editStartHour,
+      endHour: editEndHour
+    };
+    
+    fetch(`http://localhost:5000/api/tasks/${editingTask._id}`, {
+      method: "PUT",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(updatedTask)
+    })
+      .then(res => res.json())
+      .then(data => {
+        setTodos(todos.map(todo => 
+          todo._id === editingTask._id ? data : todo
+        ));
+        setEditingTask(null);
+        setEditText('');
+        setEditDate(new Date());
+        setEditStartHour('00:00');
+        setEditEndHour('01:00');
+      })
+      .catch(err => {
+        console.error('Error updating task:', err);
+      });
+  };
+
+  // Cancel edit
+  const handleCancelEdit = () => {
+    setEditingTask(null);
+    setEditText('');
+    setEditDate(new Date());
+    setEditStartHour('00:00');
+    setEditEndHour('01:00');
+  };
+
+  // Toggle finished status
+  const handleToggleFinished = (taskToToggle) => {
+    console.log('Toggling task:', taskToToggle.text, 'Current finished:', taskToToggle.finished);
+    const token = localStorage.getItem("token");
+    if (!token) return;
+    
+    fetch(`http://localhost:5000/api/tasks/${taskToToggle._id}`, {
+      method: "PUT",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ finished: !taskToToggle.finished })
+    })
+      .then(res => res.json())
+      .then(data => {
+        console.log('Updated task:', data);
+        setTodos(todos.map(todo => 
+          todo._id === taskToToggle._id ? data : todo
+        ));
+      })
+      .catch(err => {
+        console.error('Error toggling task status:', err);
+      });
   };
 
   // Date range for filtering
@@ -460,7 +588,53 @@ const DashboardPage = () => {
                       style={{ gridColumn: dayIdx + 2, gridRow: hourIdx + 2 }}
                     >
                       {cellTasks.map((task, i) => (
-                        <div key={i} style={{ background: darkMode ? '#333' : '#eee', color: darkMode ? '#fff' : '#222', borderRadius: 6, padding: '2px 6px', margin: '2px 0', fontSize: '0.95rem', fontWeight: 500 }}>{task.text}</div>
+                        <div 
+                          key={i} 
+                          style={{ 
+                            background: task.finished 
+                              ? (darkMode ? '#2e7d32' : '#c8e6c9') 
+                              : (darkMode ? '#333' : '#eee'), 
+                            color: task.finished 
+                              ? (darkMode ? '#e8f5e8' : '#1b5e20') 
+                              : (darkMode ? '#fff' : '#222'), 
+                            borderRadius: 6, 
+                            padding: '2px 6px', 
+                            margin: '2px 0', 
+                            fontSize: '0.95rem', 
+                            fontWeight: 500,
+                            cursor: 'pointer',
+                            textDecoration: task.finished ? 'line-through' : 'none',
+                            opacity: task.finished ? 0.8 : 1,
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '4px'
+                          }}
+                          title="Click to edit"
+                        >
+                          <input
+                            type="checkbox"
+                            checked={task.finished || false}
+                            onChange={(e) => {
+                              console.log('Checkbox clicked for task:', task.text);
+                              e.stopPropagation();
+                              e.preventDefault();
+                              handleToggleFinished(task);
+                            }}
+                            onClick={(e) => {
+                              console.log('Checkbox onClick for task:', task.text);
+                              e.stopPropagation();
+                            }}
+                            style={{ 
+                              cursor: 'pointer',
+                              accentColor: darkMode ? '#4CAF50' : '#2e7d32',
+                              width: '14px',
+                              height: '14px'
+                            }}
+                          />
+                          <span onClick={() => handleEditTask(task)} style={{ cursor: 'pointer', flex: 1 }}>
+                            {task.text}
+                          </span>
+                        </div>
                       ))}
                     </CalendarCell>
                   );
@@ -490,6 +664,31 @@ const DashboardPage = () => {
             </select>
             <button style={{ padding: '0.8rem 1.5rem', borderRadius: 10, border: 'none', background: darkMode ? '#222' : '#eee', color: darkMode ? '#fff' : '#222', fontWeight: 600, fontSize: '1rem', cursor: 'pointer' }} type="submit">Add</button>
           </form>
+          {editingTask && (
+            <form onSubmit={handleUpdateTask} style={{ display: 'flex', gap: '1rem', maxWidth: 900, margin: '1rem auto 0 auto', padding: '1rem', background: darkMode ? '#1a1a1a' : '#f0f0f0', borderRadius: 10 }}>
+              <input
+                style={{ flex: 2, padding: '0.8rem', borderRadius: 10, border: 'none', background: darkMode ? '#181818' : '#fff', color: darkMode ? '#fff' : '#222', fontSize: '1rem' }}
+                type="text"
+                placeholder="Edit task..."
+                value={editText}
+                onChange={e => setEditText(e.target.value)}
+              />
+              <input
+                type="date"
+                value={format(editDate, 'yyyy-MM-dd')}
+                onChange={e => setEditDate(new Date(e.target.value))}
+                style={{ flex: 1, padding: '0.8rem', borderRadius: 10, border: 'none', background: darkMode ? '#181818' : '#fff', color: darkMode ? '#fff' : '#222', fontSize: '1rem' }}
+              />
+              <select value={editStartHour} onChange={e => setEditStartHour(e.target.value)} style={{ flex: 1, padding: '0.8rem', borderRadius: 10, border: 'none', background: darkMode ? '#181818' : '#fff', color: darkMode ? '#fff' : '#222', fontSize: '1rem' }}>
+                {hours.map(h => <option key={h} value={h}>{h}</option>)}
+              </select>
+              <select value={editEndHour} onChange={e => setEditEndHour(e.target.value)} style={{ flex: 1, padding: '0.8rem', borderRadius: 10, border: 'none', background: darkMode ? '#181818' : '#fff', color: darkMode ? '#fff' : '#222', fontSize: '1rem' }}>
+                {hours.map(h => <option key={h} value={h}>{h}</option>)}
+              </select>
+              <button style={{ padding: '0.8rem 1.5rem', borderRadius: 10, border: 'none', background: darkMode ? '#4CAF50' : '#4CAF50', color: '#fff', fontWeight: 600, fontSize: '1rem', cursor: 'pointer' }} type="submit">Update</button>
+              <button style={{ padding: '0.8rem 1.5rem', borderRadius: 10, border: 'none', background: darkMode ? '#f44336' : '#f44336', color: '#fff', fontWeight: 600, fontSize: '1rem', cursor: 'pointer' }} type="button" onClick={handleCancelEdit}>Cancel</button>
+            </form>
+          )}
         </>
   ) : (
         <>
@@ -510,9 +709,53 @@ const DashboardPage = () => {
               <TaskItem theme={{ darkMode }}>No tasks yet. Add your first task!</TaskItem>
             ) : (
               paginatedTodos.map((todo, idx) => (
-                <TaskItem key={idx} theme={{ darkMode }}>
-                  <span>{todo.text}</span>
-                  <span style={{ fontSize: '0.95rem', color: darkMode ? '#bbb' : '#888' }}>{todo.date} {todo.startHour} - {todo.endHour}</span>
+                <TaskItem 
+                  key={idx} 
+                  theme={{ darkMode }}
+                  style={{ 
+                    cursor: 'pointer',
+                    opacity: todo.finished ? 0.7 : 1,
+                    textDecoration: todo.finished ? 'line-through' : 'none',
+                    background: todo.finished 
+                      ? (darkMode ? 'rgba(76, 175, 80, 0.1)' : 'rgba(200, 230, 201, 0.3)') 
+                      : 'transparent'
+                  }}
+                  title="Click to edit"
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1 }}>
+                    <input
+                      type="checkbox"
+                      checked={todo.finished || false}
+                      onChange={(e) => {
+                        console.log('Task list checkbox clicked for:', todo.text);
+                        e.stopPropagation();
+                        e.preventDefault();
+                        handleToggleFinished(todo);
+                      }}
+                      onClick={(e) => {
+                        console.log('Task list checkbox onClick for:', todo.text);
+                        e.stopPropagation();
+                      }}
+                      style={{ 
+                        cursor: 'pointer', 
+                        transform: 'scale(1.2)',
+                        accentColor: darkMode ? '#4CAF50' : '#2e7d32'
+                      }}
+                    />
+                    <span onClick={() => handleEditTask(todo)} style={{ cursor: 'pointer', flex: 1 }}>
+                      {todo.text}
+                    </span>
+                  </div>
+                  <span 
+                    onClick={() => handleEditTask(todo)}
+                    style={{ 
+                      fontSize: '0.95rem', 
+                      color: darkMode ? '#bbb' : '#888',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    {todo.date} {todo.startHour} - {todo.endHour}
+                  </span>
                 </TaskItem>
               ))
             )}
