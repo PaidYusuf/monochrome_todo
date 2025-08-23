@@ -1,3 +1,37 @@
+// Custom theme slider
+const ThemeSlider = styled.label`
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin-right: 1rem;
+`;
+
+const SliderInput = styled.input`
+  display: none;
+`;
+
+const SliderTrack = styled.span`
+  width: 44px;
+  height: 24px;
+  background: ${({ checked }) => checked ? '#222' : '#eee'};
+  border-radius: 12px;
+  position: relative;
+  transition: background 0.3s;
+  margin-right: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+`;
+
+const SliderThumb = styled.span`
+  position: absolute;
+  top: 2px;
+  left: ${({ checked }) => checked ? '22px' : '2px'};
+  width: 20px;
+  height: 20px;
+  background: ${({ checked }) => checked ? '#fff' : '#222'};
+  border-radius: 50%;
+  transition: left 0.3s, background 0.3s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+`;
 import React, { useContext, useState } from 'react';
 import { ThemeContext } from '../context/ThemeContext';
 import { useNavigate } from 'react-router-dom';
@@ -86,7 +120,7 @@ const LogoutButton = styled.button`
 const FilterBar = styled.div`
   display: flex;
   gap: 2rem;
-  justify-content: flex-start;
+  justify-content: center;
   margin: 2rem 0 1rem 0;
 `;
 
@@ -109,25 +143,26 @@ const CalendarGrid = styled.div`
   width: 100%;
   max-width: 900px;
   margin: 2rem auto;
-  background: ${({ theme }) => theme.darkMode ? '#181818' : '#fff'};
+  background: ${({ theme }) => theme.darkMode ? 'linear-gradient(135deg, #181818 0%, #222 100%)' : 'linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%)'};
   border-radius: 16px;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 16px rgba(40,40,40,0.12);
   padding: 2rem;
   display: grid;
   grid-template-columns: 120px repeat(7, 1fr);
   grid-template-rows: 60px repeat(24, 40px);
   gap: 0;
-  border: 2px solid ${({ theme }) => theme.darkMode ? '#333' : '#ddd'};
+  border: 2px solid ${({ theme }) => theme.darkMode ? '#333' : '#bbb'};
 `;
 
 const CalendarCell = styled.div`
-  border: 1.5px solid ${({ theme }) => theme.darkMode ? '#333' : '#ddd'};
+  border: 1.5px solid ${({ theme }) => theme.darkMode ? '#333' : '#bbb'};
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.08rem;
-  color: ${({ theme }) => theme.darkMode ? '#fff' : '#222'};
-  background: ${({ theme }) => theme.darkMode ? '#181818' : '#fff'};
+  color: ${({ theme }) => theme.darkMode ? '#eee' : '#222'};
+  background: ${({ theme }) => theme.darkMode ? 'rgba(34,34,34,0.85)' : 'rgba(245,245,245,0.85)'};
+  transition: background 0.3s, color 0.3s;
 `;
 
 const TaskList = styled.ul`
@@ -174,8 +209,30 @@ const PaginationButton = styled.button`
   }
 `;
 
+const AnimatedBackground = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  background: ${({ theme }) => theme.darkMode
+    ? 'linear-gradient(120deg, #111 0%, #333 40%, #444 60%, #333 80%, #111 100%)'
+    : 'linear-gradient(120deg, #111 0%, #888 40%, #fff 60%, #888 80%, #111 100%)'};
+  background-size: 200% 200%;
+  animation: gradientMove 8s ease-in-out infinite;
+  opacity: 0.6;
+  filter: blur(4px);
+
+  @keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+`;
+
 const DashboardPage = () => {
-  const { darkMode } = useContext(ThemeContext);
+  const { darkMode, setDarkMode } = useContext(ThemeContext);
   const navigate = useNavigate();
   const [view, setView] = useState('calendar');
   const [filter, setFilter] = useState('week');
@@ -250,7 +307,9 @@ const DashboardPage = () => {
 
   return (
     <Wrapper theme={{ darkMode }}>
-      <NavBar theme={{ darkMode }}>
+      <AnimatedBackground theme={{ darkMode }} />
+  <div style={{ position: 'relative', zIndex: 1, width: '100%' }}>
+        <NavBar theme={{ darkMode }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <button
             style={{
@@ -273,9 +332,22 @@ const DashboardPage = () => {
           <NavButton theme={{ darkMode }} active={view === 'calendar'} onClick={() => setView('calendar')}>Calendar View</NavButton>
           <NavButton theme={{ darkMode }} active={view === 'task'} onClick={() => setView('task')}>Task View</NavButton>
         </div>
-        <LogoutButton theme={{ darkMode }} onClick={() => { localStorage.removeItem('token'); window.location.href = '/'; }}>Log Out</LogoutButton>
-      </NavBar>
-      {view === 'calendar' ? (
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <ThemeSlider>
+            <SliderInput
+              type="checkbox"
+              checked={darkMode}
+              onChange={() => setDarkMode(!darkMode)}
+            />
+            <SliderTrack checked={darkMode}>
+              <SliderThumb checked={darkMode} />
+            </SliderTrack>
+            <span style={{ fontSize: '1rem', color: darkMode ? '#fff' : '#222', marginLeft: '0.5rem' }}>{darkMode ? 'Dark' : 'Light'} Mode</span>
+          </ThemeSlider>
+          <LogoutButton theme={{ darkMode }} style={{ marginLeft: 0 }} onClick={() => { localStorage.removeItem('token'); window.location.href = '/'; }}>Log Out</LogoutButton>
+        </div>
+  </NavBar>
+  {view === 'calendar' ? (
         <>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', maxWidth: 900, margin: '2rem auto 0 auto' }}>
             <button style={{ background: darkMode ? '#222' : '#eee', color: darkMode ? '#fff' : '#222', border: 'none', borderRadius: 8, padding: '0.5rem 1.2rem', fontWeight: 600, cursor: 'pointer' }} onClick={() => setWeekOffset(weekOffset - 1)}>Previous Week</button>
@@ -383,7 +455,7 @@ const DashboardPage = () => {
             <button style={{ padding: '0.8rem 1.5rem', borderRadius: 10, border: 'none', background: darkMode ? '#222' : '#eee', color: darkMode ? '#fff' : '#222', fontWeight: 600, fontSize: '1rem', cursor: 'pointer' }} type="submit">Add</button>
           </form>
         </>
-      ) : (
+  ) : (
         <>
           <FilterBar>
             <FilterButton theme={{ darkMode }} active={filter === 'week'} onClick={() => setFilter('week')}>Week</FilterButton>
@@ -415,7 +487,8 @@ const DashboardPage = () => {
             ))}
           </Pagination>
         </>
-      )}
+        )}
+      </div>
     </Wrapper>
   );
 };

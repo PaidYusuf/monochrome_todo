@@ -79,6 +79,23 @@ const WelcomeText = ({ dark }) => {
 	);
 };
 
+const LoggedInLanding = ({ dark }) => (
+  <LandingWrapper dark={dark} style={{ zIndex: 1, position: 'relative', minHeight: '100vh', justifyContent: 'center', alignItems: 'center', display: 'flex', flexDirection: 'column', padding: '0 1rem' }}>
+    <Title dark={dark}>Welcome Back!</Title>
+    <Subtitle dark={dark}>
+      You are logged in. Access your tasks, analytics, and more.
+    </Subtitle>
+    <ButtonGroup>
+      <MainButton dark={dark} onClick={() => window.location.href = '/dashboard'}>
+        Go to Dashboard
+      </MainButton>
+      <MainButton dark={dark} onClick={() => { localStorage.removeItem('token'); window.location.reload(); }}>
+        Log Out
+      </MainButton>
+    </ButtonGroup>
+  </LandingWrapper>
+);
+
 // FeatureSection: Alternates left/right, animates to center on scroll
 const FeatureSection = ({ feature, idx, darkMode }) => {
 	const ref = useRef();
@@ -138,6 +155,7 @@ const FeatureSection = ({ feature, idx, darkMode }) => {
 const GallerySection = () => {
 	const { darkMode } = useContext(ThemeContext);
 	const [showGallery, setShowGallery] = useState(false);
+	const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
 
 	useEffect(() => {
 		const timer = setTimeout(() => setShowGallery(true), 800); // 800ms delay
@@ -156,11 +174,13 @@ const GallerySection = () => {
           <ImageGallery dark={darkMode} />
         </div>
       )}
-			<div style={{ width: '100%', textAlign: 'center', margin: '2rem 0', position: 'relative', zIndex: 2 }}>
-				<MainButton dark={darkMode} style={{ fontSize: '1.25rem', padding: '1rem 2.5rem', borderRadius: '8px' }}>
-					Join Now
-				</MainButton>
-			</div>
+			{!token && (
+        <div style={{ width: '100%', textAlign: 'center', margin: '2rem 0', position: 'relative', zIndex: 2 }}>
+          <MainButton dark={darkMode} style={{ fontSize: '1.25rem', padding: '1rem 2.5rem', borderRadius: '8px' }}>
+            Join Now
+          </MainButton>
+        </div>
+      )}
 		</section>
 	);
 };
@@ -217,6 +237,7 @@ const LandingPage = () => {
 	const bgColor = darkMode ? '#111' : '#fff';
 	const textColor = darkMode ? '#eee' : '#222';
 	const [showArrow, setShowArrow] = useState(true);
+	const token = localStorage.getItem('token');
 
 	useEffect(() => {
 		const handleScroll = () => {
@@ -234,7 +255,7 @@ const LandingPage = () => {
 		<div style={{ position: 'relative', minHeight: '100vh', width: '100vw', maxWidth: '100vw', overflowX: 'hidden', background: bgColor, color: textColor, margin: 0, padding: 0, transition: 'background 0.3s, color 0.3s' }}>
 			<ThemeToggle />
 			<BubblesBackground />
-			<WelcomeText dark={darkMode} />
+			{token ? <LoggedInLanding dark={darkMode} /> : <WelcomeText dark={darkMode} />}
 			<GallerySection />
 			<Footer />
 			<DownArrow visible={showArrow} onClick={handleArrowClick} dark={darkMode} />
