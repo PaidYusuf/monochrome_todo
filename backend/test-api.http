@@ -1,5 +1,5 @@
 ### Signup
-POST http://localhost:5000/api/auth/signup
+POST https://monochrome-todo.onrender.com/api/auth/signup
 Content-Type: application/json
 
 {
@@ -8,7 +8,7 @@ Content-Type: application/json
 }
 
 ### Signin
-POST http://localhost:5000/api/auth/signin
+POST https://monochrome-todo.onrender.com/api/auth/signin
 Content-Type: application/json
 
 {

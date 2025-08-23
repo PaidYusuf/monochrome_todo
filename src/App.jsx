@@ -4,12 +4,12 @@ import LoginPage from '../frontend/src/pages/LoginPage';
 import SignupPage from '../frontend/src/pages/SignupPage';
 import DashboardPage from '../frontend/src/pages/DashboardPage';
 import { ThemeProvider } from '../frontend/src/context/ThemeContext';
-const cors = require('cors');
+// const cors = require('cors');
 
 function App() {
-  app.use(cors({
-    origin: 'https://paidyusuf.github.io'
-  }));
+  // app.use(cors({
+  //   origin: 'https://paidyusuf.github.io'
+  // }));
 
   return (
     <ThemeProvider>
