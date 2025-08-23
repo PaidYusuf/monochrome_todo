@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import { ThemeContext } from '../context/ThemeContext';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { addDays, startOfWeek, endOfWeek, startOfMonth, endOfMonth, startOfYear, endOfYear, format, isSameDay, isWithinInterval } from 'date-fns';
 
 const Wrapper = styled.div`
   min-height: 100vh;
@@ -113,8 +114,8 @@ const CalendarGrid = styled.div`
   box-shadow: 0 2px 16px rgba(0,0,0,0.08);
   padding: 2rem;
   display: grid;
-  grid-template-columns: 120px repeat(5, 1fr);
-  grid-template-rows: 60px repeat(4, 60px);
+  grid-template-columns: 120px repeat(7, 1fr);
+  grid-template-rows: 60px repeat(24, 40px);
   gap: 0;
   border: 2px solid ${({ theme }) => theme.darkMode ? '#333' : '#ddd'};
 `;
@@ -173,52 +174,102 @@ const PaginationButton = styled.button`
   }
 `;
 
-const days = [
-  { label: 'Saturday', date: '2025-08-23' },
-  { label: 'Sunday', date: '2025-08-24' },
-  { label: 'Monday', date: '2025-08-25' },
-  { label: 'Tuesday', date: '2025-08-26' },
-  { label: 'Wednesday', date: '2025-08-27' },
-];
-const hours = ['00:00', '01:00', '02:00', '03:00'];
-
 const DashboardPage = () => {
   const { darkMode } = useContext(ThemeContext);
   const navigate = useNavigate();
-  const [view, setView] = useState('calendar'); // 'calendar' or 'task'
-  const [filter, setFilter] = useState('week'); // 'week', 'month', 'year', 'custom'
-  const [todos, setTodos] = useState([
-    { text: 'Fitness', date: '2025-08-24', hour: '01:00' },
-    { text: 'Work', date: '2025-08-26', hour: '00:00' },
-    { text: 'Grocery', date: '2025-08-26', hour: '03:00' },
-    { text: 'Swim', date: '2025-08-27', hour: '03:00' },
-  ]);
+  const [view, setView] = useState('calendar');
+  const [filter, setFilter] = useState('week');
+  const [todos, setTodos] = useState([]);
   const [task, setTask] = useState('');
-  const [date, setDate] = useState('2025-08-23');
-  const [hour, setHour] = useState('00:00');
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [startHour, setStartHour] = useState('00:00');
+  const [endHour, setEndHour] = useState('01:00');
+  const [weekOffset, setWeekOffset] = useState(0);
   const [page, setPage] = useState(1);
+  const [customStart, setCustomStart] = useState(new Date());
+  const [customEnd, setCustomEnd] = useState(new Date());
+
+  // Generate week days dynamically
+  const weekStart = addDays(startOfWeek(new Date(), { weekStartsOn: 6 }), weekOffset * 7); // Saturday start
+  const days = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
+  const hours = Array.from({ length: 24 }, (_, i) => `${i.toString().padStart(2, '0')}:00`);
+
+  // Set initial hour window to start from current hour
+  const getInitialHourWindowStart = () => {
+    const now = new Date();
+    return now.getHours();
+  };
+  const [hourWindowStart, setHourWindowStart] = useState(getInitialHourWindowStart());
+  const visibleHours = hours.slice(hourWindowStart, hourWindowStart + 5);
 
   // Add task
   const handleAddTask = (e) => {
     e.preventDefault();
     if (!task.trim()) return;
-    setTodos([...todos, { text: task, date, hour }]);
+    setTodos([...todos, {
+      text: task,
+      date: format(selectedDate, 'yyyy-MM-dd'),
+      startHour,
+      endHour
+    }]);
     setTask('');
   };
 
+  // Date range for filtering
+  let rangeStart, rangeEnd;
+  if (filter === 'week') {
+    rangeStart = startOfWeek(new Date(), { weekStartsOn: 6 });
+    rangeEnd = endOfWeek(new Date(), { weekStartsOn: 6 });
+  } else if (filter === 'month') {
+    rangeStart = startOfMonth(new Date());
+    rangeEnd = endOfMonth(new Date());
+  } else if (filter === 'year') {
+    rangeStart = startOfYear(new Date());
+    rangeEnd = endOfYear(new Date());
+  } else if (filter === 'custom') {
+    rangeStart = customStart;
+    rangeEnd = customEnd;
+  }
+
   // Pagination logic for task view
-  const tasksPerPage = 4;
+  const tasksPerPage = 7;
   const filteredTodos = todos.filter(todo => {
-    // For now, just show all tasks for all filters
-    return true;
+    const todoDate = new Date(todo.date);
+    return isWithinInterval(todoDate, { start: rangeStart, end: rangeEnd });
   });
   const totalPages = Math.ceil(filteredTodos.length / tasksPerPage);
   const paginatedTodos = filteredTodos.slice((page - 1) * tasksPerPage, page * tasksPerPage);
 
+  // Scroll hour window
+  const scrollUp = () => {
+    setHourWindowStart(prev => Math.max(0, prev - 1));
+  };
+  const scrollDown = () => {
+    setHourWindowStart(prev => Math.min(hours.length - 5, prev + 1));
+  };
+
   return (
     <Wrapper theme={{ darkMode }}>
       <NavBar theme={{ darkMode }}>
-        <div>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <button
+            style={{
+              background: darkMode ? '#222' : '#eee',
+              color: darkMode ? '#fff' : '#222',
+              border: 'none',
+              borderRadius: 10,
+              padding: '0.7rem 1.5rem',
+              fontWeight: 700,
+              fontSize: '1.1rem',
+              cursor: 'pointer',
+              marginRight: '1.5rem',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.10)'
+            }}
+            onClick={() => navigate('/')}
+            title="Home"
+          >
+            Home
+          </button>
           <NavButton theme={{ darkMode }} active={view === 'calendar'} onClick={() => setView('calendar')}>Calendar View</NavButton>
           <NavButton theme={{ darkMode }} active={view === 'task'} onClick={() => setView('task')}>Task View</NavButton>
         </div>
@@ -226,25 +277,89 @@ const DashboardPage = () => {
       </NavBar>
       {view === 'calendar' ? (
         <>
-          <CalendarGrid theme={{ darkMode }}>
-            <CalendarCell theme={{ darkMode }} style={{ fontWeight: 'bold', fontSize: '1.1rem' }}>Day/Hour</CalendarCell>
-            {days.map(day => (
-              <CalendarCell theme={{ darkMode }} key={day.date}>
-                <div>
-                  <div style={{ fontWeight: 'bold' }}>{day.label}</div>
-                  <div style={{ fontSize: '0.95rem', color: darkMode ? '#bbb' : '#888' }}>{day.date}</div>
-                </div>
-              </CalendarCell>
-            ))}
-            {hours.map(hour => (
-              <CalendarCell theme={{ darkMode }} key={hour} style={{ fontWeight: 'bold' }}>{hour}</CalendarCell>
-              )).concat(
-              days.flatMap(day => hours.map(hour => {
-                const todo = todos.find(t => t.date === day.date && t.hour === hour);
-                return <CalendarCell theme={{ darkMode }} key={day.date + hour}>{todo ? todo.text : ''}</CalendarCell>;
-              }))
-            )}
-          </CalendarGrid>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', maxWidth: 900, margin: '2rem auto 0 auto' }}>
+            <button style={{ background: darkMode ? '#222' : '#eee', color: darkMode ? '#fff' : '#222', border: 'none', borderRadius: 8, padding: '0.5rem 1.2rem', fontWeight: 600, cursor: 'pointer' }} onClick={() => setWeekOffset(weekOffset - 1)}>Previous Week</button>
+            <div style={{ fontWeight: 'bold', fontSize: '1.2rem', color: darkMode ? '#eee' : '#222' }}>Week of {format(weekStart, 'dd MMM yyyy')}</div>
+            <button style={{ background: darkMode ? '#222' : '#eee', color: darkMode ? '#fff' : '#222', border: 'none', borderRadius: 8, padding: '0.5rem 1.2rem', fontWeight: 600, cursor: 'pointer' }} onClick={() => setWeekOffset(weekOffset + 1)}>Next Week</button>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', margin: '1rem 0' }}>
+            <button style={{ background: darkMode ? '#222' : '#eee', color: darkMode ? '#fff' : '#222', border: 'none', borderRadius: 8, padding: '0.5rem 1.2rem', fontWeight: 600, cursor: 'pointer' }} onClick={scrollUp} disabled={hourWindowStart === 0}>↑</button>
+            <span style={{ color: darkMode ? '#eee' : '#222', fontWeight: 600 }}>Hours {visibleHours[0]} - {visibleHours[visibleHours.length - 1]}</span>
+            <button style={{ background: darkMode ? '#222' : '#eee', color: darkMode ? '#fff' : '#222', border: 'none', borderRadius: 8, padding: '0.5rem 1.2rem', fontWeight: 600, cursor: 'pointer' }} onClick={scrollDown} disabled={hourWindowStart === hours.length - 5}>↓</button>
+          </div>
+          <div
+            style={{ width: '100%', maxWidth: 900, margin: '0 auto' }}
+            onWheel={e => {
+              if (e.deltaY > 0) scrollDown();
+              else if (e.deltaY < 0) scrollUp();
+            }}
+          >
+            <CalendarGrid theme={{ darkMode }} style={{ gridTemplateColumns: '120px repeat(7, 1fr)', gridTemplateRows: `60px repeat(5, 48px)` }}>
+              <CalendarCell theme={{ darkMode }} style={{ fontWeight: 'bold', fontSize: '1.1rem' }}>Day/Hour</CalendarCell>
+              {days.map(day => (
+                <CalendarCell theme={{ darkMode }} key={day.toISOString()}>
+                  <div>
+                    <div style={{ fontWeight: 'bold' }}>{format(day, 'EEEE')}</div>
+                    <div style={{ fontSize: '0.95rem', color: darkMode ? '#bbb' : '#888' }}>{format(day, 'dd MMM yyyy')}</div>
+                  </div>
+                </CalendarCell>
+              ))}
+              {visibleHours.map((hour, hourIdx) => (
+                <CalendarCell theme={{ darkMode }} key={hour} style={{ fontWeight: 'bold', gridColumn: 1, gridRow: hourIdx + 2 }}>{hour}</CalendarCell>
+              ))}
+              {days.map((day, dayIdx) =>
+                visibleHours.map((hour, hourIdx) => {
+                  const todo = todos.find(t => t.date === format(day, 'yyyy-MM-dd') && t.startHour === hour);
+                  return (
+                    <CalendarCell
+                      theme={{ darkMode }}
+                      key={format(day, 'yyyy-MM-dd') + hour}
+                      style={{ gridColumn: dayIdx + 2, gridRow: hourIdx + 2 }}
+                    >
+                      {todo ? todo.text : ''}
+                    </CalendarCell>
+                  );
+                })
+              )}
+              {days.map((day, dayIdx) =>
+                visibleHours.map((hour, hourIdx) => {
+                  // Find if any task covers this cell
+                  const cellTasks = todos.filter(t => {
+                    if (t.date !== format(day, 'yyyy-MM-dd')) {
+                      // If endHour < startHour, check if this is the next day and hour is <= endHour - 1
+                      const prevDay = days[dayIdx - 1];
+                      if (prevDay && t.date === format(prevDay, 'yyyy-MM-dd')) {
+                        const startIdx = hours.indexOf(t.startHour);
+                        const endIdx = hours.indexOf(t.endHour);
+                        const cellIdx = hours.indexOf(hour);
+                        return endIdx < startIdx && cellIdx < endIdx;
+                      }
+                      return false;
+                    }
+                    const startIdx = hours.indexOf(t.startHour);
+                    const endIdx = hours.indexOf(t.endHour);
+                    const cellIdx = hours.indexOf(hour);
+                    if (endIdx < startIdx) {
+                      // Task spans to next day
+                      return cellIdx >= startIdx;
+                    }
+                    return cellIdx >= startIdx && cellIdx < endIdx;
+                  });
+                  return (
+                    <CalendarCell
+                      theme={{ darkMode }}
+                      key={format(day, 'yyyy-MM-dd') + hour}
+                      style={{ gridColumn: dayIdx + 2, gridRow: hourIdx + 2 }}
+                    >
+                      {cellTasks.map((task, i) => (
+                        <div key={i} style={{ background: darkMode ? '#333' : '#eee', color: darkMode ? '#fff' : '#222', borderRadius: 6, padding: '2px 6px', margin: '2px 0', fontSize: '0.95rem', fontWeight: 500 }}>{task.text}</div>
+                      ))}
+                    </CalendarCell>
+                  );
+                })
+              )}
+            </CalendarGrid>
+          </div>
           <form onSubmit={handleAddTask} style={{ display: 'flex', gap: '1rem', maxWidth: 900, margin: '2rem auto 0 auto' }}>
             <input
               style={{ flex: 2, padding: '0.8rem', borderRadius: 10, border: 'none', background: darkMode ? '#181818' : '#fff', color: darkMode ? '#fff' : '#222', fontSize: '1rem' }}
@@ -253,10 +368,16 @@ const DashboardPage = () => {
               value={task}
               onChange={e => setTask(e.target.value)}
             />
-            <select value={date} onChange={e => setDate(e.target.value)} style={{ flex: 1, padding: '0.8rem', borderRadius: 10, border: 'none', background: darkMode ? '#181818' : '#fff', color: darkMode ? '#fff' : '#222', fontSize: '1rem' }}>
-              {days.map(day => <option key={day.date} value={day.date}>{day.label} {day.date}</option>)}
+            <input
+              type="date"
+              value={format(selectedDate, 'yyyy-MM-dd')}
+              onChange={e => setSelectedDate(new Date(e.target.value))}
+              style={{ flex: 1, padding: '0.8rem', borderRadius: 10, border: 'none', background: darkMode ? '#181818' : '#fff', color: darkMode ? '#fff' : '#222', fontSize: '1rem' }}
+            />
+            <select value={startHour} onChange={e => setStartHour(e.target.value)} style={{ flex: 1, padding: '0.8rem', borderRadius: 10, border: 'none', background: darkMode ? '#181818' : '#fff', color: darkMode ? '#fff' : '#222', fontSize: '1rem' }}>
+              {hours.map(h => <option key={h} value={h}>{h}</option>)}
             </select>
-            <select value={hour} onChange={e => setHour(e.target.value)} style={{ flex: 1, padding: '0.8rem', borderRadius: 10, border: 'none', background: darkMode ? '#181818' : '#fff', color: darkMode ? '#fff' : '#222', fontSize: '1rem' }}>
+            <select value={endHour} onChange={e => setEndHour(e.target.value)} style={{ flex: 1, padding: '0.8rem', borderRadius: 10, border: 'none', background: darkMode ? '#181818' : '#fff', color: darkMode ? '#fff' : '#222', fontSize: '1rem' }}>
               {hours.map(h => <option key={h} value={h}>{h}</option>)}
             </select>
             <button style={{ padding: '0.8rem 1.5rem', borderRadius: 10, border: 'none', background: darkMode ? '#222' : '#eee', color: darkMode ? '#fff' : '#222', fontWeight: 600, fontSize: '1rem', cursor: 'pointer' }} type="submit">Add</button>
@@ -269,6 +390,12 @@ const DashboardPage = () => {
             <FilterButton theme={{ darkMode }} active={filter === 'month'} onClick={() => setFilter('month')}>Month</FilterButton>
             <FilterButton theme={{ darkMode }} active={filter === 'year'} onClick={() => setFilter('year')}>Year</FilterButton>
             <FilterButton theme={{ darkMode }} active={filter === 'custom'} onClick={() => setFilter('custom')}>Custom Time</FilterButton>
+            {filter === 'custom' && (
+              <>
+                <input type="date" value={customStart.toISOString().slice(0,10)} onChange={e => setCustomStart(new Date(e.target.value))} style={{ marginLeft: '1rem', padding: '0.5rem', borderRadius: 8, border: 'none', background: darkMode ? '#181818' : '#fff', color: darkMode ? '#fff' : '#222' }} />
+                <input type="date" value={customEnd.toISOString().slice(0,10)} onChange={e => setCustomEnd(new Date(e.target.value))} style={{ marginLeft: '0.5rem', padding: '0.5rem', borderRadius: 8, border: 'none', background: darkMode ? '#181818' : '#fff', color: darkMode ? '#fff' : '#222' }} />
+              </>
+            )}
           </FilterBar>
           <TaskList theme={{ darkMode }}>
             {paginatedTodos.length === 0 ? (
@@ -277,7 +404,7 @@ const DashboardPage = () => {
               paginatedTodos.map((todo, idx) => (
                 <TaskItem key={idx} theme={{ darkMode }}>
                   <span>{todo.text}</span>
-                  <span style={{ fontSize: '0.95rem', color: darkMode ? '#bbb' : '#888' }}>{todo.date} {todo.hour}</span>
+                  <span style={{ fontSize: '0.95rem', color: darkMode ? '#bbb' : '#888' }}>{todo.date} {todo.startHour} - {todo.endHour}</span>
                 </TaskItem>
               ))
             )}
