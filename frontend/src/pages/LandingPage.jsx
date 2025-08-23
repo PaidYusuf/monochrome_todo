@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ThemeToggle from '../components/ThemeToggle';
 import { ThemeContext } from '../context/ThemeContext';
@@ -79,31 +79,83 @@ const WelcomeText = ({ dark }) => {
 	);
 };
 
+// FeatureSection: Alternates left/right, animates to center on scroll
+const FeatureSection = ({ feature, idx, darkMode }) => {
+	const ref = useRef();
+	const [inView, setInView] = useState(false);
+
+	useEffect(() => {
+		const observer = new window.IntersectionObserver(
+			([entry]) => setInView(entry.isIntersecting),
+			{ threshold: 0.8 }
+		);
+		if (ref.current) observer.observe(ref.current);
+		return () => observer.disconnect();
+	}, []);
+
+	// Alternate left/right
+	const isLeft = idx % 2 === 0;
+	return (
+		<div
+			ref={ref}
+			style={{
+				width: '100%',
+				maxWidth: '800px', // was 500px
+				margin: '0 auto',
+				display: 'flex',
+				flexDirection: isLeft ? 'row' : 'row-reverse',
+				alignItems: 'center',
+				gap: '2rem',
+				opacity: inView ? 1 : 0,
+				transform: inView
+					? 'translateX(0)'
+					: isLeft
+						? 'translateX(-120px)'
+						: 'translateX(120px)',
+				transition: 'all 0.8s cubic-bezier(.68,-0.55,.27,1.55)',
+				marginBottom: '3rem',
+			}}
+		>
+			<img
+				src={feature.src}
+				alt={feature.label}
+				style={{
+					width: '55%', // slightly less to balance with wider text
+					maxWidth: '400px',
+					borderRadius: '16px',
+					boxShadow: '0 4px 24px rgba(0,0,0,0.08)',
+					display: 'block',
+				}}
+			/>
+			<div style={{ flex: 1, textAlign: isLeft ? 'left' : 'right', maxWidth: '380px', minWidth: '220px', padding: '0 2rem' }}>
+				<div style={{ fontWeight: 'bold', fontSize: '1.1rem', color: darkMode ? '#eee' : '#444', marginBottom: '0.5rem' }}>{feature.label}</div>
+				<div style={{ fontSize: '1.05rem', color: darkMode ? '#bbb' : '#888' }}>{feature.desc}</div>
+			</div>
+		</div>
+	);
+};
+
 const GallerySection = () => {
-  const { darkMode } = useContext(ThemeContext);
+	const { darkMode } = useContext(ThemeContext);
+	const [showGallery, setShowGallery] = useState(false);
+
+	useEffect(() => {
+		const timer = setTimeout(() => setShowGallery(true), 800); // 800ms delay
+		return () => clearTimeout(timer);
+	}, []);
+
 	return (
 		<section style={{ width: '100vw', maxWidth: '100vw', minHeight: '60vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'transparent', margin: '0 auto', padding: '4rem 0', position: 'relative' }}>
-			<ImageGallery dark={darkMode} />
 			<div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2rem', margin: '4rem 0', position: 'relative', zIndex: 2 }}>
 				{featureImages.map((feature, idx) => (
-					<div key={idx} style={{ width: '100%', maxWidth: '500px', margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
-						<img
-							src={feature.src}
-							alt={feature.label}
-							style={{
-								width: '90%',
-								maxWidth: '500px',
-								borderRadius: '16px',
-								boxShadow: '0 4px 24px rgba(0,0,0,0.08)',
-								margin: '0 auto',
-								display: 'block',
-							}}
-						/>
-						<div style={{ fontWeight: 'bold', fontSize: '1.1rem', color: darkMode ? '#eee' : '#444', textAlign: 'center', marginTop: '0.5rem' }}>{feature.label}</div>
-						<div style={{ fontSize: '1.05rem', color: darkMode ? '#bbb' : '#888', textAlign: 'center', marginBottom: '1rem' }}>{feature.desc}</div>
-					</div>
+					<FeatureSection key={idx} feature={feature} idx={idx} darkMode={darkMode} />
 				))}
 			</div>
+			{showGallery && (
+        <div style={{ width: '90vw', maxWidth: '1200px', margin: '0 auto', padding: '2rem 0', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <ImageGallery dark={darkMode} />
+        </div>
+      )}
 			<div style={{ width: '100%', textAlign: 'center', margin: '2rem 0', position: 'relative', zIndex: 2 }}>
 				<MainButton dark={darkMode} style={{ fontSize: '1.25rem', padding: '1rem 2.5rem', borderRadius: '8px' }}>
 					Join Now
