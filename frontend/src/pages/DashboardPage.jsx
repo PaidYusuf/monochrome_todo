@@ -13,12 +13,12 @@ const SliderInput = styled.input`
 const SliderTrack = styled.span`
   width: 44px;
   height: 24px;
-  background: ${({ checked }) => checked ? '#222' : '#eee'};
+  background: ${({ checked }) => checked ? '#404040' : '#c0c0c0'};
   border-radius: 12px;
   position: relative;
   transition: background 0.3s;
   margin-right: 0.5rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 `;
 
 const SliderThumb = styled.span`
@@ -27,12 +27,12 @@ const SliderThumb = styled.span`
   left: ${({ checked }) => checked ? '22px' : '2px'};
   width: 20px;
   height: 20px;
-  background: ${({ checked }) => checked ? '#fff' : '#222'};
+  background: ${({ checked }) => checked ? '#e5e5e5' : '#1a1a1a'};
   border-radius: 50%;
   transition: left 0.3s, background 0.3s;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 `;
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { ThemeContext } from '../context/ThemeContext';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -41,8 +41,8 @@ import { addDays, startOfWeek, endOfWeek, startOfMonth, endOfMonth, startOfYear,
 const Wrapper = styled.div`
   min-height: 100vh;
   width: 100vw;
-  background: ${({ theme }) => theme.darkMode ? '#111' : '#f5f5f5'};
-  color: ${({ theme }) => theme.darkMode ? '#fff' : '#222'};
+  background: ${({ theme }) => theme.darkMode ? '#0a0a0a' : '#fafafa'};
+  color: ${({ theme }) => theme.darkMode ? '#e5e5e5' : '#1a1a1a'};
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -78,19 +78,22 @@ const Button = styled.button`
 `;
 
 const NavBar = styled.div`
-  width: 100vw;
-  background: ${({ theme }) => theme.darkMode ? '#181818' : '#f5f5f5'};
-  color: ${({ theme }) => theme.darkMode ? '#fff' : '#222'};
+  width: 100%;
+  background: ${({ theme }) => theme.darkMode ? '#1a1a1a' : '#ffffff'};
+  color: ${({ theme }) => theme.darkMode ? '#e5e5e5' : '#1a1a1a'};
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.2rem 2rem 0.5rem 2rem;
-  border-bottom: 2px solid ${({ theme }) => theme.darkMode ? '#333' : '#ddd'};
+  padding: 1.2rem 1rem 0.5rem 1rem;
+  import React, { useContext, useState, useEffect } from 'react';
+  import { useNavigate } from 'react-router-dom';
+  box-sizing: border-box;
+  box-shadow: 0 2px 8px rgba(0,0,0,${({ theme }) => theme.darkMode ? '0.3' : '0.1'});
 `;
 
 const NavButton = styled.button`
-  background: ${({ active, theme }) => active ? (theme.darkMode ? '#222' : '#ddd') : 'transparent'};
-  color: ${({ theme }) => theme.darkMode ? '#fff' : '#222'};
+  background: ${({ active, theme }) => active ? (theme.darkMode ? '#333333' : '#e0e0e0') : 'transparent'};
+  color: ${({ theme }) => theme.darkMode ? '#e5e5e5' : '#1a1a1a'};
   border: none;
   font-size: 1.2rem;
   font-weight: 700;
@@ -100,13 +103,13 @@ const NavButton = styled.button`
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
   &:hover {
-    background: ${({ theme }) => theme.darkMode ? '#222' : '#eee'};
+    background: ${({ theme }) => theme.darkMode ? '#404040' : '#d5d5d5'};
   }
 `;
 
 const LogoutButton = styled.button`
-  background: ${({ theme }) => theme.darkMode ? '#222' : '#eee'};
-  color: ${({ theme }) => theme.darkMode ? '#fff' : '#222'};
+  background: ${({ theme }) => theme.darkMode ? '#333333' : '#e0e0e0'};
+  color: ${({ theme }) => theme.darkMode ? '#e5e5e5' : '#1a1a1a'};
   border: none;
   font-size: 1.1rem;
   font-weight: 700;
@@ -114,7 +117,12 @@ const LogoutButton = styled.button`
   border-radius: 10px;
   cursor: pointer;
   margin-left: 2rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+  box-shadow: 0 2px 8px rgba(0,0,0,${({ theme }) => theme.darkMode ? '0.4' : '0.15'});
+  transition: background 0.2s, transform 0.1s;
+  &:hover {
+    background: ${({ theme }) => theme.darkMode ? '#404040' : '#d0d0d0'};
+    transform: translateY(-1px);
+  }
 `;
 
 const FilterBar = styled.div`
@@ -125,17 +133,18 @@ const FilterBar = styled.div`
 `;
 
 const FilterButton = styled.button`
-  background: ${({ active, theme }) => active ? (theme.darkMode ? '#222' : '#ddd') : 'transparent'};
-  color: ${({ theme }) => theme.darkMode ? '#fff' : '#222'};
-  border: none;
+  background: ${({ active, theme }) => active ? (theme.darkMode ? '#333333' : '#e0e0e0') : 'transparent'};
+  color: ${({ theme }) => theme.darkMode ? '#e5e5e5' : '#1a1a1a'};
+  border: ${({ theme }) => theme.darkMode ? '1px solid #404040' : '1px solid #c0c0c0'};
   font-size: 1.1rem;
   font-weight: 600;
   padding: 0.6rem 1.8rem;
   border-radius: 10px;
   cursor: pointer;
-  transition: background 0.2s, color 0.2s;
+  transition: all 0.2s;
   &:hover {
-    background: ${({ theme }) => theme.darkMode ? '#222' : '#eee'};
+    background: ${({ theme }) => theme.darkMode ? '#404040' : '#d5d5d5'};
+    border-color: ${({ theme }) => theme.darkMode ? '#505050' : '#a0a0a0'};
   }
 `;
 
@@ -143,37 +152,41 @@ const CalendarGrid = styled.div`
   width: 100%;
   max-width: 900px;
   margin: 2rem auto;
-  background: ${({ theme }) => theme.darkMode ? 'linear-gradient(135deg, #181818 0%, #222 100%)' : 'linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%)'};
+  background: ${({ theme }) => theme.darkMode ? '#1a1a1a' : '#ffffff'};
   border-radius: 16px;
-  box-shadow: 0 2px 16px rgba(40,40,40,0.12);
+  box-shadow: 0 4px 20px rgba(0,0,0,${({ theme }) => theme.darkMode ? '0.4' : '0.15'});
   padding: 2rem;
   display: grid;
   grid-template-columns: 120px repeat(7, 1fr);
   grid-template-rows: 60px repeat(24, 40px);
   gap: 0;
-  border: 2px solid ${({ theme }) => theme.darkMode ? '#333' : '#bbb'};
+  border: 2px solid ${({ theme }) => theme.darkMode ? '#404040' : '#c0c0c0'};
 `;
 
 const CalendarCell = styled.div`
-  border: 1.5px solid ${({ theme }) => theme.darkMode ? '#333' : '#bbb'};
+  border: 1px solid ${({ theme }) => theme.darkMode ? '#333333' : '#d0d0d0'};
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.08rem;
-  color: ${({ theme }) => theme.darkMode ? '#eee' : '#222'};
-  background: ${({ theme }) => theme.darkMode ? 'rgba(34,34,34,0.85)' : 'rgba(245,245,245,0.85)'};
+  color: ${({ theme }) => theme.darkMode ? '#e5e5e5' : '#1a1a1a'};
+  background: ${({ theme }) => theme.darkMode ? '#262626' : '#f8f8f8'};
   transition: background 0.3s, color 0.3s;
+  &:hover {
+    background: ${({ theme }) => theme.darkMode ? '#333333' : '#eeeeee'};
+  }
 `;
 
 const TaskList = styled.ul`
   width: 100%;
   max-width: 900px;
-  background: ${({ theme }) => theme.darkMode ? '#222' : '#f7f7f7'};
+  background: ${({ theme }) => theme.darkMode ? '#1a1a1a' : '#ffffff'};
   border-radius: 16px;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 20px rgba(0,0,0,${({ theme }) => theme.darkMode ? '0.4' : '0.15'});
   margin: 2rem auto;
   padding: 2rem;
   list-style: none;
+  border: 1px solid ${({ theme }) => theme.darkMode ? '#404040' : '#c0c0c0'};
 `;
 
 const TaskItem = styled.li`
@@ -181,10 +194,17 @@ const TaskItem = styled.li`
   align-items: center;
   justify-content: space-between;
   padding: 1rem 0;
-  border-bottom: 1px solid ${({ theme }) => theme.darkMode ? '#333' : '#ddd'};
-  color: ${({ theme }) => theme.darkMode ? '#fff' : '#222'};
+  border-bottom: 1px solid ${({ theme }) => theme.darkMode ? '#404040' : '#d0d0d0'};
+  color: ${({ theme }) => theme.darkMode ? '#e5e5e5' : '#1a1a1a'};
   font-size: 1.15rem;
   &:last-child { border-bottom: none; }
+  &:hover {
+    background: ${({ theme }) => theme.darkMode ? '#262626' : '#f8f8f8'};
+    margin: 0 -1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    border-radius: 8px;
+  }
 `;
 
 const Pagination = styled.div`
@@ -195,17 +215,18 @@ const Pagination = styled.div`
 `;
 
 const PaginationButton = styled.button`
-  background: ${({ active, theme }) => active ? (theme.darkMode ? '#222' : '#ddd') : 'transparent'};
-  color: ${({ theme }) => theme.darkMode ? '#fff' : '#222'};
-  border: none;
+  background: ${({ active, theme }) => active ? (theme.darkMode ? '#333333' : '#e0e0e0') : 'transparent'};
+  color: ${({ theme }) => theme.darkMode ? '#e5e5e5' : '#1a1a1a'};
+  border: ${({ theme }) => theme.darkMode ? '1px solid #404040' : '1px solid #c0c0c0'};
   font-size: 1.1rem;
   font-weight: 600;
   padding: 0.6rem 1.2rem;
   border-radius: 8px;
   cursor: pointer;
-  transition: background 0.2s, color 0.2s;
+  transition: all 0.2s;
   &:hover {
-    background: ${({ theme }) => theme.darkMode ? '#222' : '#eee'};
+    background: ${({ theme }) => theme.darkMode ? '#404040' : '#d5d5d5'};
+    border-color: ${({ theme }) => theme.darkMode ? '#505050' : '#a0a0a0'};
   }
 `;
 
@@ -234,6 +255,12 @@ const AnimatedBackground = styled.div`
 const DashboardPage = () => {
   const { darkMode, setDarkMode } = useContext(ThemeContext);
   const navigate = useNavigate();
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login");
+    }
+  }, [navigate]);
   const [view, setView] = useState('calendar');
   const [filter, setFilter] = useState('week');
   const [todos, setTodos] = useState([]);
@@ -313,8 +340,8 @@ const DashboardPage = () => {
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <button
             style={{
-              background: darkMode ? '#222' : '#eee',
-              color: darkMode ? '#fff' : '#222',
+              background: darkMode ? '#333333' : '#e0e0e0',
+              color: darkMode ? '#e5e5e5' : '#1a1a1a',
               border: 'none',
               borderRadius: 10,
               padding: '0.7rem 1.5rem',
@@ -322,10 +349,19 @@ const DashboardPage = () => {
               fontSize: '1.1rem',
               cursor: 'pointer',
               marginRight: '1.5rem',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.10)'
+              boxShadow: `0 2px 8px rgba(0,0,0,${darkMode ? '0.4' : '0.15'})`,
+              transition: 'all 0.2s'
             }}
             onClick={() => navigate('/')}
             title="Home"
+            onMouseEnter={(e) => {
+              e.target.style.background = darkMode ? '#404040' : '#d0d0d0';
+              e.target.style.transform = 'translateY(-1px)';
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.background = darkMode ? '#333333' : '#e0e0e0';
+              e.target.style.transform = 'translateY(0)';
+            }}
           >
             Home
           </button>
@@ -342,7 +378,7 @@ const DashboardPage = () => {
             <SliderTrack checked={darkMode}>
               <SliderThumb checked={darkMode} />
             </SliderTrack>
-            <span style={{ fontSize: '1rem', color: darkMode ? '#fff' : '#222', marginLeft: '0.5rem' }}>{darkMode ? 'Dark' : 'Light'} Mode</span>
+            <span style={{ fontSize: '1rem', color: darkMode ? '#e5e5e5' : '#1a1a1a', marginLeft: '0.5rem' }}>{darkMode ? 'Dark' : 'Light'} Mode</span>
           </ThemeSlider>
           <LogoutButton theme={{ darkMode }} style={{ marginLeft: 0 }} onClick={() => { localStorage.removeItem('token'); window.location.href = '/'; }}>Log Out</LogoutButton>
         </div>
