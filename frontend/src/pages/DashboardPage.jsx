@@ -474,7 +474,7 @@ const DashboardPage = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
-      navigate("/login");
+      navigate("/monochrome_todo/login");
     }
   }, [navigate]);
 
@@ -509,7 +509,7 @@ const DashboardPage = () => {
     const token = localStorage.getItem("token");
     if (!token) return;
     
-    fetch("http://localhost:5000/api/tasks", {
+    fetch("https://monochrome-todo.onrender.com/api/tasks", {
       method: "GET",
       headers: {
         "Authorization": `Bearer ${token}`,
@@ -538,7 +538,7 @@ const DashboardPage = () => {
     if (!token) return;
 
     try {
-      const response = await fetch("http://localhost:5000/api/tasks", {
+      const response = await fetch("https://monochrome-todo.onrender.com/api/tasks", {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${token}`,
@@ -569,7 +569,7 @@ const DashboardPage = () => {
     if (!token) return;
 
     try {
-      const response = await fetch(`http://localhost:5000/api/tasks/${taskId}`, {
+      const response = await fetch(`https://monochrome-todo.onrender.com/api/tasks/${taskId}`, {
         method: "PUT",
         headers: {
           "Authorization": `Bearer ${token}`,
@@ -594,7 +594,7 @@ const DashboardPage = () => {
     if (!token) return;
 
     try {
-      const response = await fetch(`http://localhost:5000/api/tasks/${taskId}`, {
+      const response = await fetch(`https://monochrome-todo.onrender.com/api/tasks/${taskId}`, {
         method: "DELETE",
         headers: {
           "Authorization": `Bearer ${token}`
@@ -624,7 +624,7 @@ const DashboardPage = () => {
     if (!token) return;
 
     try {
-      const response = await fetch(`http://localhost:5000/api/tasks/${editingTask}`, {
+      const response = await fetch(`https://monochrome-todo.onrender.com/api/tasks/${editingTask}`, {
         method: "PUT",
         headers: {
           "Authorization": `Bearer ${token}`,
@@ -701,7 +701,7 @@ const DashboardPage = () => {
         <NavButtons>
           <NavButton 
             darkMode={darkMode} 
-            onClick={() => navigate('/')} // Home route
+            onClick={() => navigate('/monochrome_todo')} // Home route
           >
             Home
           </NavButton>

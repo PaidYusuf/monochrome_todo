@@ -211,7 +211,7 @@ const LoginPage = () => {
     setError('');
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:5000/api/auth/signin', {
+      const res = await fetch('https://monochrome-todo.onrender.com/api/auth/signin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
@@ -219,7 +219,7 @@ const LoginPage = () => {
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Login failed');
       localStorage.setItem('token', data.token);
-      window.location.href = '/';
+      window.location.href = '/monochrome_todo';
     } catch (err) {
       setError(err.message);
     } finally {
@@ -230,7 +230,7 @@ const LoginPage = () => {
   return (
   <LoginWrapper theme={{ darkMode }}>
       <RainingBackground />
-      <HomeButton onClick={() => navigate('/')} title="Return Home">
+      <HomeButton onClick={() => navigate('/monochrome_todo')} title="Return Home">
         {/* Home icon from Icons8 - now white */}
         <img src="https://img.icons8.com/ios-filled/50/ffffff/home.png" alt="Home Icon" width="32" height="32" style={{filter: 'drop-shadow(0 0 8px #aaa)'}} />
       </HomeButton>

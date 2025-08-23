@@ -86,7 +86,7 @@ const LoggedInLanding = ({ dark }) => (
       You are logged in. Access your tasks, analytics, and more.
     </Subtitle>
     <ButtonGroup>
-      <MainButton dark={dark} onClick={() => window.location.href = '/dashboard'}>
+      <MainButton dark={dark} onClick={() => window.location.href = '/monochrome_todo/dashboard'}>
         Go to Dashboard
       </MainButton>
       <MainButton dark={dark} onClick={() => { localStorage.removeItem('token'); window.location.reload(); }}>
@@ -176,7 +176,11 @@ const GallerySection = () => {
       )}
 			{!token && (
         <div style={{ width: '100%', textAlign: 'center', margin: '2rem 0', position: 'relative', zIndex: 2 }}>
-          <MainButton dark={darkMode} style={{ fontSize: '1.25rem', padding: '1rem 2.5rem', borderRadius: '8px' }}>
+          <MainButton
+            dark={darkMode}
+            style={{ fontSize: '1.25rem', padding: '1rem 2.5rem', borderRadius: '8px' }}
+            onClick={() => window.location.href = '/monochrome_todo/register'}
+          >
             Join Now
           </MainButton>
         </div>
