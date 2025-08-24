@@ -79,22 +79,26 @@ const WelcomeText = ({ dark }) => {
 	);
 };
 
-const LoggedInLanding = ({ dark }) => (
-  <LandingWrapper dark={dark} style={{ zIndex: 1, position: 'relative', minHeight: '100vh', justifyContent: 'center', alignItems: 'center', display: 'flex', flexDirection: 'column', padding: '0 1rem' }}>
-    <Title dark={dark}>Welcome Back!</Title>
-    <Subtitle dark={dark}>
-      You are logged in. Access your tasks, analytics, and more.
-    </Subtitle>
-    <ButtonGroup>
-      <MainButton dark={dark} onClick={() => window.location.href = '/monochrome_todo/dashboard'}>
-        Go to Dashboard
-      </MainButton>
-      <MainButton dark={dark} onClick={() => { localStorage.removeItem('token'); window.location.reload(); }}>
-        Log Out
-      </MainButton>
-    </ButtonGroup>
-  </LandingWrapper>
-);
+const LoggedInLanding = ({ dark }) => {
+  const navigate = useNavigate();
+  
+  return (
+    <LandingWrapper dark={dark} style={{ zIndex: 1, position: 'relative', minHeight: '100vh', justifyContent: 'center', alignItems: 'center', display: 'flex', flexDirection: 'column', padding: '0 1rem' }}>
+      <Title dark={dark}>Welcome Back!</Title>
+      <Subtitle dark={dark}>
+        You are logged in. Access your tasks, analytics, and more.
+      </Subtitle>
+      <ButtonGroup>
+        <MainButton dark={dark} onClick={() => navigate('/dashboard')}>
+          Go to Dashboard
+        </MainButton>
+        <MainButton dark={dark} onClick={() => { localStorage.removeItem('token'); window.location.reload(); }}>
+          Log Out
+        </MainButton>
+      </ButtonGroup>
+    </LandingWrapper>
+  );
+};
 
 // FeatureSection: Alternates left/right, animates to center on scroll
 const FeatureSection = ({ feature, idx, darkMode }) => {
@@ -179,7 +183,7 @@ const GallerySection = () => {
           <MainButton
             dark={darkMode}
             style={{ fontSize: '1.25rem', padding: '1rem 2.5rem', borderRadius: '8px' }}
-            onClick={() => window.location.href = '/monochrome_todo/register'}
+            onClick={() => window.location.href = '/register'}
           >
             Join Now
           </MainButton>

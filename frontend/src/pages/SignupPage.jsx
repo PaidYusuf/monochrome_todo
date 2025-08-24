@@ -244,7 +244,7 @@ const SignupPage = () => {
   return (
   <LoginWrapper theme={{ darkMode }}>
       <RainingBackground />
-      <HomeButton onClick={() => navigate('/monochrome_todo')} title="Return Home">
+      <HomeButton onClick={() => navigate('/')} title="Return Home">
         {/* Home icon from Icons8 - now white */}
         <img src="https://img.icons8.com/ios-filled/50/ffffff/home.png" alt="Home Icon" width="32" height="32" style={{filter: 'drop-shadow(0 0 8px #aaa)'}} />
       </HomeButton>

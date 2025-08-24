@@ -701,7 +701,7 @@ const DashboardPage = () => {
         <NavButtons>
           <NavButton 
             darkMode={darkMode} 
-            onClick={() => navigate('/monochrome_todo')} // Home route
+            onClick={() => navigate('/')} // Home route
           >
             Home
           </NavButton>
