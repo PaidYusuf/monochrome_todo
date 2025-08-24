@@ -20,14 +20,21 @@ const gradientShift = keyframes`
   }
 `;
 
+// Animated bubbles keyframes
+const bubbles = keyframes`
+  0% { transform: translateY(0) scale(1); opacity: 0.7; }
+  50% { transform: translateY(-40px) scale(1.1); opacity: 1; }
+  100% { transform: translateY(0) scale(1); opacity: 0.7; }
+`;
+
 const Container = styled.div`
   min-height: 100vh;
   background: ${({ darkMode }) => darkMode 
-    ? 'linear-gradient(-45deg, #0a071a, #1a1a2e, #0a071a, #2e1a2e)' 
+    ? '#111' 
     : 'linear-gradient(-45deg, #fff, #f0f0f0, #fff, #e8e8e8)'};
   background-size: 400% 400%;
   animation: ${gradientShift} 15s ease infinite;
-  color: ${({ darkMode }) => darkMode ? '#e0e0e0' : '#222'};
+  color: ${({ darkMode }) => darkMode ? '#eee' : '#222'};
   font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
   position: absolute;
   top: 0;
@@ -48,11 +55,11 @@ const Header = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 1.5rem 2rem;
-  background: ${({ darkMode }) => darkMode ? 'rgba(10, 7, 26, 0.5)' : 'rgba(255,255,255,0.1)'};
+  background: ${({ darkMode }) => darkMode ? 'rgba(17,17,17,0.9)' : 'rgba(255,255,255,0.1)'};
   backdrop-filter: blur(10px);
   width: 100%;
   box-sizing: border-box;
-  border-bottom: 1px solid ${({ darkMode }) => darkMode ? 'rgba(0, 245, 212, 0.1)' : 'rgba(0,0,0,0.1)'};
+  border-bottom: 1px solid ${({ darkMode }) => darkMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.1)'};
   @media (max-width: 768px) {
     flex-direction: column;
     gap: 1rem;
@@ -65,7 +72,7 @@ const Logo = styled.h1`
   font-weight: 700;
   letter-spacing: 1px;
   margin: 0;
-  color: ${({ darkMode }) => darkMode ? '#00f5d4' : '#222'};
+  color: ${({ darkMode }) => darkMode ? '#eee' : '#222'};
   
   @media (max-width: 768px) {
     font-size: 1.3rem;
@@ -90,19 +97,19 @@ const NavButton = styled.button`
   border: none;
   border-radius: 4px;
   background: ${({ darkMode, active }) => {
-    if (active) return darkMode ? '#00f5d4' : '#222';
-    return darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.1)';
+    if (active) return darkMode ? '#eee' : '#222';
+    return darkMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.1)';
   }};
   color: ${({ darkMode, active }) => {
-    if (active) return darkMode ? '#0a071a' : '#fff';
-    return darkMode ? '#e0e0e0' : '#222';
+    if (active) return darkMode ? '#222' : '#fff';
+    return darkMode ? '#eee' : '#222';
   }};
   cursor: pointer;
   transition: all 0.2s ease;
   
   &:hover {
-    background: ${({ darkMode }) => darkMode ? '#00f5d4' : '#222'};
-    color: ${({ darkMode }) => darkMode ? '#0a071a' : '#fff'};
+    background: ${({ darkMode }) => darkMode ? '#eee' : '#222'};
+    color: ${({ darkMode }) => darkMode ? '#222' : '#fff'};
     transform: translateY(-2px);
   }
   @media (max-width: 480px) {
@@ -143,11 +150,11 @@ const ThemeToggle = styled.div`
   cursor: pointer;
   padding: 0.5rem 1rem;
   border-radius: 4px;
-  background: ${({ darkMode }) => darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.1)'};
+  background: ${({ darkMode }) => darkMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.1)'};
   transition: all 0.2s ease;
   
   &:hover {
-    background: ${({ darkMode }) => darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.2)'};
+    background: ${({ darkMode }) => darkMode ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.2)'};
   }
 `;
 
@@ -167,7 +174,7 @@ const MainContent = styled.div`
 `;
 
 const AddTaskForm = styled.form`
-  background: ${({ darkMode }) => darkMode ? 'rgba(255,255,255,0.03)' : 'rgba(255,255,255,0.9)'};
+  background: ${({ darkMode }) => darkMode ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.9)'};
   backdrop-filter: blur(10px);
   padding: 2rem;
   border-radius: 12px;
@@ -177,7 +184,7 @@ const AddTaskForm = styled.form`
   flex-wrap: wrap;
   width: 100%;
   box-sizing: border-box;
-  border: 1px solid ${({ darkMode }) => darkMode ? 'rgba(0, 245, 212, 0.1)' : 'rgba(0,0,0,0.1)'};
+  border: 1px solid ${({ darkMode }) => darkMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.1)'};
   box-shadow: ${({ darkMode }) => darkMode 
     ? '0 4px 20px rgba(0,0,0,0.3)' 
     : '0 4px 20px rgba(0,0,0,0.1)'};
@@ -190,10 +197,10 @@ const AddTaskForm = styled.form`
 
 const Input = styled.input`
   padding: 0.8rem 1rem;
-  border: 1px solid ${({ darkMode }) => darkMode ? 'rgba(0, 245, 212, 0.2)' : 'rgba(0,0,0,0.2)'};
+  border: 1px solid ${({ darkMode }) => darkMode ? 'rgba(255,255,255,0.18)' : 'rgba(0,0,0,0.2)'};
   border-radius: 8px;
-  background: ${({ darkMode }) => darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.95)'};
-  color: ${({ darkMode }) => darkMode ? '#e0e0e0' : '#222'};
+  background: ${({ darkMode }) => darkMode ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.95)'};
+  color: ${({ darkMode }) => darkMode ? '#eee' : '#222'};
   font-size: 0.95rem;
   flex: ${({ flex }) => flex || 1};
   min-width: 0;
@@ -201,12 +208,11 @@ const Input = styled.input`
   
   &:focus {
     outline: none;
-    border-color: ${({ darkMode }) => darkMode ? '#00f5d4' : '#007bff'};
-    box-shadow: 0 0 0 2px ${({ darkMode }) => darkMode ? 'rgba(0, 245, 212, 0.1)' : 'rgba(0,123,255,0.1)'};
+    border-color: ${({ darkMode }) => darkMode ? '#eee' : '#007bff'};
+    box-shadow: 0 0 0 2px ${({ darkMode }) => darkMode ? 'rgba(255,255,255,0.12)' : 'rgba(0,123,255,0.1)'};
   }
-  
   &::placeholder {
-    color: ${({ darkMode }) => darkMode ? 'rgba(224, 224, 224, 0.5)' : 'rgba(0,0,0,0.5)'};
+    color: ${({ darkMode }) => darkMode ? 'rgba(238,238,238,0.5)' : 'rgba(0,0,0,0.5)'};
   }
   
   @media (max-width: 768px) {
@@ -226,16 +232,16 @@ const Input = styled.input`
 
 const Select = styled.select`
   padding: 0.6rem 0.8rem;
-  border: 1px solid ${({ darkMode }) => darkMode ? 'rgba(0, 245, 212, 0.2)' : 'rgba(0,0,0,0.2)'};
+  border: 1px solid ${({ darkMode }) => darkMode ? 'rgba(255,255,255,0.18)' : 'rgba(0,0,0,0.2)'};
   border-radius: 4px;
-  background: ${({ darkMode }) => darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.8)'};
-  color: ${({ darkMode }) => darkMode ? '#e0e0e0' : '#222'};
+  background: ${({ darkMode }) => darkMode ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.8)'};
+  color: ${({ darkMode }) => darkMode ? '#eee' : '#222'};
   font-size: 0.9rem;
   cursor: pointer;
   
   &:focus {
     outline: none;
-    border-color: ${({ darkMode }) => darkMode ? '#00f5d4' : '#222'};
+    border-color: ${({ darkMode }) => darkMode ? '#eee' : '#222'};
   }
   
   @media (max-width: 768px) {
@@ -261,13 +267,13 @@ const Button = styled.button`
   border: none;
   border-radius: 4px;
   background: ${({ variant, darkMode }) => {
-    if (variant === 'success') return '#00f5d4';
-    if (variant === 'danger') return '#ff4d6d';
-    return darkMode ? '#00f5d4' : '#222';
+    if (variant === 'success') return '#ff4d6d';
+    if (variant === 'danger') return '#ff2a58';
+    return darkMode ? '#eee' : '#222';
   }};
   color: ${({ variant, darkMode }) => {
-    if (variant === 'success' || variant === 'danger') return '#0a071a';
-    return darkMode ? '#0a071a' : '#fff';
+    if (variant === 'success' || variant === 'danger') return '#fff';
+    return darkMode ? '#222' : '#fff';
   }};
   cursor: pointer;
   transition: all 0.2s ease;
@@ -285,13 +291,13 @@ const Button = styled.button`
 `;
 
 const TasksSection = styled.div`
-  background: ${({ darkMode }) => darkMode ? 'rgba(255,255,255,0.03)' : 'rgba(255,255,255,0.9)'};
+  background: ${({ darkMode }) => darkMode ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.9)'};
   backdrop-filter: blur(10px);
   border-radius: 12px;
   padding: 2rem;
   width: 100%;
   box-sizing: border-box;
-  border: 1px solid ${({ darkMode }) => darkMode ? 'rgba(0, 245, 212, 0.1)' : 'rgba(0,0,0,0.1)'};
+  border: 1px solid ${({ darkMode }) => darkMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.1)'};
   box-shadow: ${({ darkMode }) => darkMode 
     ? '0 4px 20px rgba(0,0,0,0.3)' 
     : '0 4px 20px rgba(0,0,0,0.1)'};
@@ -329,24 +335,24 @@ const FilterButton = styled.button`
   font-size: 0.8rem;
   font-weight: 500;
   border: 1px solid ${({ darkMode, active }) => {
-    if (active) return darkMode ? '#00f5d4' : '#222';
-    return darkMode ? 'rgba(0, 245, 212, 0.2)' : 'rgba(0,0,0,0.3)';
+    if (active) return darkMode ? '#eee' : '#222';
+    return darkMode ? 'rgba(255,255,255,0.18)' : 'rgba(0,0,0,0.3)';
   }};
   border-radius: 4px;
   background: ${({ darkMode, active }) => {
-    if (active) return darkMode ? '#00f5d4' : '#222';
+    if (active) return darkMode ? '#eee' : '#222';
     return 'transparent';
   }};
   color: ${({ darkMode, active }) => {
-    if (active) return darkMode ? '#0a071a' : '#fff';
-    return darkMode ? '#e0e0e0' : '#222';
+    if (active) return darkMode ? '#222' : '#fff';
+    return darkMode ? '#eee' : '#222';
   }};
   cursor: pointer;
   transition: all 0.2s ease;
   
   &:hover {
-    background: ${({ darkMode }) => darkMode ? '#00f5d4' : '#222'};
-    color: ${({ darkMode }) => darkMode ? '#0a071a' : '#fff'};
+    background: ${({ darkMode }) => darkMode ? '#eee' : '#222'};
+    color: ${({ darkMode }) => darkMode ? '#222' : '#fff'};
   }
   @media (max-width: 480px) {
     padding: 0.3rem 0.6rem;
@@ -363,7 +369,7 @@ const TaskList = styled.div`
 `;
 
 const TaskItem = styled.div`
-  background: ${({ darkMode }) => darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.8)'};
+  background: ${({ darkMode }) => darkMode ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.8)'};
   padding: 0.8rem;
   border-radius: 6px;
   display: flex;
@@ -374,7 +380,7 @@ const TaskItem = styled.div`
   
   &:hover {
     transform: translateY(-3px);
-    background: ${({ darkMode }) => darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.9)'};
+    background: ${({ darkMode }) => darkMode ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.9)'};
   }
   
   @media (max-width: 768px) {
@@ -427,24 +433,24 @@ const Pagination = styled.div`
 const PageButton = styled.button`
   padding: 0.5rem 1rem;
   border: 1px solid ${({ darkMode, active }) => {
-    if (active) return darkMode ? '#00f5d4' : '#222';
-    return darkMode ? 'rgba(0, 245, 212, 0.2)' : 'rgba(0,0,0,0.3)';
+    if (active) return darkMode ? '#eee' : '#222';
+    return darkMode ? 'rgba(255,255,255,0.18)' : 'rgba(0,0,0,0.3)';
   }};
   border-radius: 4px;
   background: ${({ darkMode, active }) => {
-    if (active) return darkMode ? '#00f5d4' : '#222';
+    if (active) return darkMode ? '#eee' : '#222';
     return 'transparent';
   }};
   color: ${({ darkMode, active }) => {
-    if (active) return darkMode ? '#0a071a' : '#fff';
-    return darkMode ? '#e0e0e0' : '#222';
+    if (active) return darkMode ? '#222' : '#fff';
+    return darkMode ? '#eee' : '#222';
   }};
   cursor: pointer;
   transition: all 0.2s ease;
   
   &:hover {
-    background: ${({ darkMode }) => darkMode ? '#00f5d4' : '#222'};
-    color: ${({ darkMode }) => darkMode ? '#0a071a' : '#fff'};
+    background: ${({ darkMode }) => darkMode ? '#eee' : '#222'};
+    color: ${({ darkMode }) => darkMode ? '#222' : '#fff'};
   }
   @media (max-width: 480px) {
     padding: 0.3rem 0.7rem;
@@ -455,7 +461,7 @@ const PageButton = styled.button`
 `;
 
 const EditForm = styled.form`
-  background: ${({ darkMode }) => darkMode ? 'rgba(0, 245, 212, 0.1)' : 'rgba(76, 175, 80, 0.1)'};
+  background: ${({ darkMode }) => darkMode ? 'rgba(255,255,255,0.08)' : 'rgba(76, 175, 80, 0.1)'};
   backdrop-filter: blur(10px);
   padding: 1rem;
   border-radius: 8px;
@@ -463,7 +469,7 @@ const EditForm = styled.form`
   display: flex;
   gap: 0.5rem;
   flex-wrap: wrap;
-  border: 1px solid #00f5d4;
+  border: 1px solid #eee;
   
   @media (max-width: 768px) {
     flex-direction: column;
@@ -496,12 +502,12 @@ const CalendarGrid = styled.div`
 `;
 
 const CalendarDay = styled.div`
-  background: ${({ $darkMode }) => $darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.95)'};
+  background: ${({ $darkMode }) => $darkMode ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.95)'};
   backdrop-filter: blur(10px);
   padding: 1rem;
   border-radius: 10px;
   min-height: 140px;
-  border: 1px solid ${({ $darkMode }) => $darkMode ? 'rgba(0, 245, 212, 0.1)' : 'rgba(0,0,0,0.1)'};
+  border: 1px solid ${({ $darkMode }) => $darkMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.1)'};
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   box-shadow: ${({ $darkMode }) => $darkMode 
     ? '0 2px 8px rgba(0,0,0,0.3)' 
@@ -517,6 +523,94 @@ const CalendarDay = styled.div`
   @media (max-width: 768px) {
     min-height: 120px;
     padding: 0.75rem;
+  }
+`;
+
+// Color variables for background animation
+const DEFAULT_BG_COLORS = {
+  light1: '#ff4d6d33', // pink light
+  light2: '#00f5d433', // teal light
+  gradientColor1: '#ff4d6d',
+  gradientColor2: '#00f5d4',
+};
+
+// Settings Modal for background animation colors
+const SettingsModal = ({ show, onClose, colors, setColors }) => {
+  const [light1, setLight1] = useState(colors.light1);
+  const [light2, setLight2] = useState(colors.light2);
+  const [gradientColor1, setGradientColor1] = useState(colors.gradientColor1);
+  const [gradientColor2, setGradientColor2] = useState(colors.gradientColor2);
+
+  const withAlpha = (hex, alpha = '33') => {
+    hex = hex.replace(/[^#0-9a-fA-F]/g, '');
+    if (hex.length === 7) return hex + alpha;
+    if (hex.length === 9) return hex.slice(0, 7) + alpha;
+    return hex;
+  };
+
+  const handleSave = async () => {
+    const token = localStorage.getItem("token");
+    const newColors = {
+      light1: withAlpha(light1),
+      light2: withAlpha(light2),
+      gradientColor1,
+      gradientColor2,
+    };
+    setColors(newColors);
+    // Save to backend
+    if (token) {
+      await fetch("https://monochrome-todo.onrender.com/api/theme", {
+        method: "PUT",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ bgColors: newColors })
+      });
+    }
+    onClose();
+  };
+
+  if (!show) return null;
+  return (
+    <div style={{
+      position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: 'rgba(0,0,0,0.5)', zIndex: 1001, display: 'flex', alignItems: 'center', justifyContent: 'center',
+    }}>
+      <div style={{ background: '#222', color: '#eee', borderRadius: 12, padding: '2rem', minWidth: 320, boxShadow: '0 4px 24px rgba(0,0,0,0.2)' }}>
+        <h2 style={{ marginBottom: '1.5rem', textAlign: 'center' }}>Background Animation Settings</h2>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <label>Light 1 Color: <input type="color" value={light1.slice(0,7)} onChange={e => setLight1(e.target.value)} /></label>
+          <label>Light 2 Color: <input type="color" value={light2.slice(0,7)} onChange={e => setLight2(e.target.value)} /></label>
+          <label>Gradient Color 1: <input type="color" value={gradientColor1} onChange={e => setGradientColor1(e.target.value)} /></label>
+          <label>Gradient Color 2: <input type="color" value={gradientColor2} onChange={e => setGradientColor2(e.target.value)} /></label>
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '2rem' }}>
+          <button onClick={onClose} style={{ background: '#444', color: '#eee', border: 'none', borderRadius: 6, padding: '0.5rem 1.2rem', cursor: 'pointer' }}>Cancel</button>
+          <button onClick={handleSave} style={{ background: '#ff4d6d', color: '#fff', border: 'none', borderRadius: 6, padding: '0.5rem 1.2rem', cursor: 'pointer' }}>Save</button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const AnimatedBackground = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+  background: ${({ darkMode, colors }) => darkMode ? `radial-gradient(circle at 20% 30%, ${colors.light1} 0%, transparent 60%), radial-gradient(circle at 80% 70%, ${colors.light2} 0%, transparent 60%)` : 'none'};
+  overflow: hidden;
+
+  & > .bubble {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.5;
+    animation: ${bubbles} 8s ease-in-out infinite;
+    filter: blur(2px);
+    background: ${({ colors }) => `linear-gradient(135deg, ${colors.gradientColor1} 0%, ${colors.gradientColor2} 100%)`};
   }
 `;
 
@@ -547,6 +641,33 @@ const DashboardPage = () => {
   const [editDate, setEditDate] = useState(new Date());
   const [editStartHour, setEditStartHour] = useState('09:00');
   const [editEndHour, setEditEndHour] = useState('10:00');
+  const [showSettings, setShowSettings] = useState(false);
+  const [bgColors, setBgColors] = useState(DEFAULT_BG_COLORS);
+  const [loadingTheme, setLoadingTheme] = useState(true);
+
+  // Fetch theme options from backend on mount
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+    fetch("https://monochrome-todo.onrender.com/api/theme", {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.bgColors) {
+          setBgColors(data.bgColors);
+        }
+        if (typeof data.darkMode === 'boolean') {
+          setDarkMode(data.darkMode);
+        }
+        setLoadingTheme(false);
+      })
+      .catch(() => setLoadingTheme(false));
+  }, [setDarkMode]);
 
   // Time options
   const hours = [];
@@ -747,8 +868,26 @@ const DashboardPage = () => {
   const totalPages = Math.ceil(filteredTasks.length / tasksPerPage);
   const paginatedTasks = filteredTasks.slice((page - 1) * tasksPerPage, page * tasksPerPage);
 
+  if (loadingTheme) {
+    return <div style={{ color: '#eee', background: '#222', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Loading theme...</div>;
+  }
   return (
     <Container darkMode={darkMode}>
+      <AnimatedBackground darkMode={darkMode} colors={bgColors}>
+        {/* Bubbles for dark mode only */}
+        {darkMode && (
+          <>
+            <div className="bubble" style={{ width: 120, height: 120, top: '10%', left: '15%', animationDelay: '0s' }} />
+            <div className="bubble" style={{ width: 80, height: 80, top: '60%', left: '70%', animationDelay: '2s' }} />
+            <div className="bubble" style={{ width: 60, height: 60, top: '40%', left: '50%', animationDelay: '1s' }} />
+            <div className="bubble" style={{ width: 100, height: 100, top: '80%', left: '20%', animationDelay: '3s' }} />
+            <div className="bubble" style={{ width: 90, height: 90, top: '25%', left: '80%', animationDelay: '1.5s' }} />
+          </>
+        )}
+      </AnimatedBackground>
+      <button onClick={() => setShowSettings(true)} style={{ position: 'fixed', top: 24, right: 24, zIndex: 1002, background: '#222', color: '#eee', border: 'none', borderRadius: 8, padding: '0.7rem 1.3rem', fontWeight: 600, boxShadow: '0 2px 8px rgba(0,0,0,0.12)', cursor: 'pointer' }}>Settings</button>
+      <SettingsModal show={showSettings} onClose={() => setShowSettings(false)} colors={bgColors} setColors={setBgColors} />
+      
       <Header darkMode={darkMode}>
         <Logo darkMode={darkMode}>Monochrome Todo</Logo>
         
@@ -961,7 +1100,7 @@ const DashboardPage = () => {
                           fontSize: '0.75rem', 
                           padding: '0.3rem 0.5rem', 
                           marginBottom: '0.3rem',
-                          background: darkMode ? 'rgba(0, 245, 212, 0.08)' : 'rgba(0,0,0,0.08)',
+                          background: darkMode ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.08)',
                           borderRadius: '4px',
                           textDecoration: task.finished ? 'line-through' : 'none',
                           opacity: task.finished ? 0.6 : 1,
