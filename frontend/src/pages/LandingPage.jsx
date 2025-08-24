@@ -121,7 +121,7 @@ const FeatureSection = ({ feature, idx, darkMode }) => {
 			ref={ref}
 			style={{
 				width: '100%',
-				maxWidth: '800px', // was 500px
+				maxWidth: '800px',
 				margin: '0 auto',
 				display: 'flex',
 				flexDirection: isLeft ? 'row' : 'row-reverse',
@@ -135,22 +135,38 @@ const FeatureSection = ({ feature, idx, darkMode }) => {
 						: 'translateX(120px)',
 				transition: 'all 0.8s cubic-bezier(.68,-0.55,.27,1.55)',
 				marginBottom: '3rem',
+				// Mobile styles
+				...(window.innerWidth <= 768 ? {
+					flexDirection: 'column',
+					gap: '1.2rem',
+					maxWidth: '98vw',
+					marginBottom: '2rem',
+					padding: '0 0.5rem',
+					transform: 'none',
+				} : {})
 			}}
 		>
 			<img
 				src={feature.src}
 				alt={feature.label}
 				style={{
-					width: '55%', // slightly less to balance with wider text
-					maxWidth: '400px',
+					width: window.innerWidth <= 768 ? '90vw' : '55%',
+					maxWidth: window.innerWidth <= 768 ? '340px' : '400px',
 					borderRadius: '16px',
 					boxShadow: '0 4px 24px rgba(0,0,0,0.08)',
 					display: 'block',
+					margin: window.innerWidth <= 768 ? '0 auto' : undefined,
 				}}
 			/>
-			<div style={{ flex: 1, textAlign: isLeft ? 'left' : 'right', maxWidth: '380px', minWidth: '220px', padding: '0 2rem' }}>
-				<div style={{ fontWeight: 'bold', fontSize: '1.1rem', color: darkMode ? '#eee' : '#444', marginBottom: '0.5rem' }}>{feature.label}</div>
-				<div style={{ fontSize: '1.05rem', color: darkMode ? '#bbb' : '#888' }}>{feature.desc}</div>
+			<div style={{
+				flex: 1,
+				textAlign: isLeft ? 'left' : 'right',
+				maxWidth: window.innerWidth <= 768 ? '95vw' : '380px',
+				minWidth: '180px',
+				padding: window.innerWidth <= 768 ? '0 0.5rem' : '0 2rem',
+			}}>
+				<div style={{ fontWeight: 'bold', fontSize: window.innerWidth <= 768 ? '1rem' : '1.1rem', color: darkMode ? '#eee' : '#444', marginBottom: '0.5rem' }}>{feature.label}</div>
+				<div style={{ fontSize: window.innerWidth <= 768 ? '0.98rem' : '1.05rem', color: darkMode ? '#bbb' : '#888' }}>{feature.desc}</div>
 			</div>
 		</div>
 	);

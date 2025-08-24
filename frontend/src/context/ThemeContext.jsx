@@ -12,7 +12,7 @@ export const ThemeProvider = ({ children }) => {
     try {
       const token = getToken();
       if (!token) return null;
-      const res = await fetch('http://localhost:5000/api/user/theme', {
+      const res = await fetch('https://monochrome-todo.onrender.com/api/user/theme', {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (!res.ok) return null;
@@ -28,7 +28,7 @@ export const ThemeProvider = ({ children }) => {
     try {
       const token = getToken();
       if (!token) return;
-      await fetch('http://localhost:5000/api/user/theme', {
+      await fetch('https://monochrome-todo.onrender.com/api/user/theme', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

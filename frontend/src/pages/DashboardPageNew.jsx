@@ -366,7 +366,7 @@ const DashboardPage = () => {
     const token = localStorage.getItem("token");
     if (!token) return;
     
-    fetch("http://localhost:5000/api/tasks", {
+    fetch("https://monochrome-todo.onrender.com/api/tasks", {
       method: "GET",
       headers: {
         "Authorization": `Bearer ${token}`,
