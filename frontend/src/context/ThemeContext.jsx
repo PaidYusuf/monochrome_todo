@@ -28,8 +28,8 @@ export const ThemeProvider = ({ children }) => {
     try {
       const token = getToken();
       if (!token) return;
-  await fetch('https://monochrome-todo.onrender.com/api/theme', {
-        method: 'POST',
+      await fetch('https://monochrome-todo.onrender.com/api/theme', {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
