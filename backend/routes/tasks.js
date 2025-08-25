@@ -1,6 +1,6 @@
-import express from 'express';
-import jwt from 'jsonwebtoken';
-import Task from '../models/Task.js';
+const express = require('express');
+const jwt = require('jsonwebtoken');
+const Task = require('../models/Task');
 
 const router = express.Router();
 
@@ -74,4 +74,4 @@ router.delete('/:id', authMiddleware, async (req, res) => {
   }
 });
 
-export default router;
+module.exports = router;
